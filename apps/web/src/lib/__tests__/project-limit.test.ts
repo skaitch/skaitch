@@ -3,7 +3,6 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { canAddProject, WEB_PROJECT_LIMIT } from '@skaitch/core/lib/projectLimit';
 import HomePage from '@skaitch/ui/components/HomePage';
-import BetaBanner from '../../components/BetaBanner';
 import { webPlatform } from '../../platform';
 
 const meta = (id: string) => ({ id, name: id, description: '', createdAt: '2026-11-15', updatedAt: '2026-11-15' });
@@ -39,9 +38,4 @@ it('counts archived projects toward the limit', () => {
   expect(full).toContain('Limite atteinte');
   expect(full).toContain('Actifs · 1');
   expect(full).toContain('Archivés · 2');
-});
-
-it('renders the beta badge in French and English', () => {
-  expect(renderToStaticMarkup(createElement(BetaBanner, { lang: 'fr', projectLimit: 3 }))).toContain('Bêta');
-  expect(renderToStaticMarkup(createElement(BetaBanner, { lang: 'en', projectLimit: 3 }))).toContain('up to 3 projects');
 });

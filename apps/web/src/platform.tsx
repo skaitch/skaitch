@@ -10,7 +10,6 @@ import { useMcpBridge } from './hooks/useMcpBridge';
 import { captureLegacyAi, publicAiConfig } from './lib/aiVaultClient';
 import { firestoreProjectRepository } from './lib/projectStore';
 import About from './components/About';
-import BetaBanner from './components/BetaBanner';
 import { WEB_PROJECT_LIMIT } from '@skaitch/core/lib/projectLimit';
 import LoginPage from './components/auth/LoginPage';
 import SettingsModal from './components/modals/SettingsModal';
@@ -52,7 +51,6 @@ export const webPlatform: SkaitchPlatform = {
   createProjectRepository: account => firestoreProjectRepository(account.id),
   surveyInbox: webSurveyInbox,
   renderAbout: (lang, placement) => <About lang={lang} placement={placement} />,
-  renderBanner: props => <BetaBanner {...props} />,
   projectLimit: WEB_PROJECT_LIMIT,
   useAssistant: useWebAssistant,
   renderSettings: ({ accountId, ...props }) => <SettingsModal {...props} uid={accountId} />,
