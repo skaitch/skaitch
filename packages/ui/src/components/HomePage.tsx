@@ -288,7 +288,6 @@ interface HomePageProps {
   /** Archives (true) or unarchives (false) a project (ADR 0020). */
   onArchive: (id: string, archived: boolean) => void;
   onImportIFC: () => void;
-  onImportBimwiq: () => void;
   onImportSkaitch: () => void;
   onSettings: () => void;
   onLoadSample: () => void;
@@ -299,7 +298,7 @@ interface HomePageProps {
 const disabledStyle: React.CSSProperties = { opacity: 0.45, cursor: 'not-allowed' };
 
 export default function HomePage({
-  projects, loading, user, about, onLogout, lang, onLangChange, onOpen, onCreate, onEdit, onDuplicate, onDelete, onArchive, onImportIFC, onImportBimwiq, onImportSkaitch, onSettings, onLoadSample, projectLimit,
+  projects, loading, user, about, onLogout, lang, onLangChange, onOpen, onCreate, onEdit, onDuplicate, onDelete, onArchive, onImportIFC, onImportSkaitch, onSettings, onLoadSample, projectLimit,
 }: HomePageProps) {
   const [query, setQuery] = useState('');
   const [editTarget, setEditTarget] = useState<ProjectMeta | null>(null);
@@ -391,7 +390,6 @@ export default function HomePage({
             {makeT(lang)("import_ifc")}
           </button>
           <ToolbarMenu label={makeT(lang)('Other imports')} lang={lang} icon={<ChevronDown size={14} />}>
-            <button className="toolbar-menu-action" data-menu-close disabled={atLimit} title={limitNotice} onClick={onImportBimwiq}>{makeT(lang)('import_bimwiq')}</button>
             <button className="toolbar-menu-action" data-menu-close disabled={atLimit} title={limitNotice} onClick={onImportSkaitch}>{makeT(lang)('Import skAItch project (.skaitch)')}</button>
           </ToolbarMenu>
           <button onClick={onCreate} disabled={atLimit} title={limitNotice} style={limited(headerBtn(true))}>

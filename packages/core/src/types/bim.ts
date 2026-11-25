@@ -34,7 +34,7 @@ export interface RoundTripResult {
 // shortcut: bounded compressed requests fit Vercel; use object storage and jobs for larger models.
 export const BIM_WIRE_LIMIT = 4_000_000;
 export const BIM_BODY_LIMIT = 64 * 1024 * 1024;
-export type BimOperation = 'export-json' | 'export-dxf' | 'import-ifc' | 'import-bimwiq' | 'export-ifc' | 'patch-ifc' | 'check-ifc' | 'fix-ifc' | 'mcp-model' | 'mcp-batch' | 'project-read' | 'project-list' | 'project-write' | 'project-delete' | 'mcp-read' | 'mcp-settings';
+export type BimOperation = 'export-json' | 'export-dxf' | 'import-ifc' | 'export-ifc' | 'patch-ifc' | 'check-ifc' | 'fix-ifc' | 'mcp-model' | 'mcp-batch' | 'project-read' | 'project-list' | 'project-write' | 'project-delete' | 'mcp-read' | 'mcp-settings';
 
 export const MCP_MODEL_TOOLS: readonly string[] = ['create_ifc_element', 'update_ifc_element', 'delete_ifc_element', 'create_storey', 'update_storey', 'delete_storey', 'get_wall_connections', 'create_wall', 'update_wall', 'connect_walls', 'create_door', 'create_window', 'create_section', 'create_roof', 'create_stair', 'update_element', 'update_opening', 'create_furniture', 'update_furniture', 'create_space', 'create_slab', 'create_dimension', 'create_marker', 'create_technical', 'update_technical', 'create_column', 'update_column', 'create_chimney', 'update_chimney', 'delete_element', 'create_sheet', 'add_sheet_view', 'update_sheet_view'];
 export type McpModelChange =

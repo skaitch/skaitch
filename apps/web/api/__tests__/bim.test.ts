@@ -3,7 +3,6 @@ import { gzipSync, gunzipSync } from 'node:zlib';
 import { readFileSync } from 'node:fs';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { buildStarter } from '@skaitch/core/data/starter';
-import fixture from '../../src/lib/__tests__/fixtures/bimwiq.json';
 import { BIM_BODY_LIMIT, BIM_WIRE_LIMIT } from '@skaitch/core/types/bim';
 
 const session = vi.hoisted(() => ({ uid: 'user' as string | null }));
@@ -59,15 +58,6 @@ it('bounds decompression and model element counts before running the engines', a
   expect((await call('import-ifc', inflated, { raw: true, headers: { 'content-encoding': 'gzip' } })).status).toBe(413);
   const items = Object.fromEntries(Array.from({ length: 20_001 }, (_, i) => [`p_${i}`, { id: `p_${i}`, type: 'Project' }]));
   expect((await call('export-ifc', { items })).status).toBe(413);
-});
-it('imports BIMWIQ on the server with all walls, spaces and openings', async () => {
-  const response = await call('import-bimwiq', fixture);
-  expect(response.status).toBe(200);
-  expect(response.headers['cache-control']).toBe('private, no-store');
-  const all = Object.values(response.data.items) as any[];
-  expect(all.filter(item => item.type === 'Wall')).toHaveLength(40);
-  expect(all.filter(item => item.type === 'Window')).toHaveLength(8);
-  expect(all.filter(item => item.type === 'Door')).toHaveLength(8);
 });
 it('exports, patches and verifies the same model through the authenticated API', async () => {
   const items = buildStarter();

@@ -5,7 +5,6 @@ vi.mock('../firebase', () => ({ auth: { get currentUser() { return session.user;
 import { requestBim, httpBimService } from '../bimClient';
 import { provideBimService } from '@skaitch/ui/lib/bimService';
 import { importIFCBuffer } from '@skaitch/ui/lib/importIFC';
-import { importBimwiq } from '@skaitch/ui/lib/importBimwiq';
 import { exportIFC } from '@skaitch/ui/lib/exportIFC';
 import { patchIFC } from '@skaitch/ui/lib/patchIFC';
 import { checkRoundTrip, fixRoundTripProblems } from '@skaitch/ui/lib/roundTripCheck';
@@ -36,6 +35,6 @@ it('routes every migrated browser operation to the server and preserves the orig
   vi.stubGlobal('fetch', fetch);
   const original = new TextEncoder().encode('ISO-10303-21;').buffer;
   expect((await importIFCBuffer(original)).rawIfcBuffer).toBe(original);
-  await importBimwiq({}); await exportIFC({}); await patchIFC({}, original); await checkRoundTrip({}); await fixRoundTripProblems({});
-  expect(fetch.mock.calls.map(([url]) => url)).toEqual(['import-ifc', 'import-bimwiq', 'export-ifc', 'patch-ifc', 'check-ifc', 'fix-ifc'].map(operation => `/api/bim?operation=${operation}`));
+  await exportIFC({}); await patchIFC({}, original); await checkRoundTrip({}); await fixRoundTripProblems({});
+  expect(fetch.mock.calls.map(([url]) => url)).toEqual(['import-ifc', 'export-ifc', 'patch-ifc', 'check-ifc', 'fix-ifc'].map(operation => `/api/bim?operation=${operation}`));
 });

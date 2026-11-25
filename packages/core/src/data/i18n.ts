@@ -35,7 +35,7 @@ export type I18nKey =
   | 'no_selection' | 'click_to_select'
   | 'geometry' | 'metadata' | 'psets'
   | 'add' | 'delete' | 'duplicate'
-  | 'import_ifc' | 'import_bimwiq' | 'export_ifc' | 'settings'
+  | 'import_ifc' | 'export_ifc' | 'settings'
   | 'assistant' | 'new_project'
   | 'save' | 'last_saved'
   | 'plan_units' | 'meters'
@@ -63,7 +63,7 @@ export const I18N: Record<LangType, I18nDict> = {
     no_selection: 'Aucune sélection', click_to_select: 'Cliquez sur un élément du plan ou de l\'arbre pour voir ses propriétés',
     geometry: 'Géométrie', metadata: 'Métadonnées', psets: 'Property Sets (IFC)',
     add: 'Ajouter', delete: 'Supprimer', duplicate: 'Dupliquer',
-    import_ifc: 'Importer IFC', import_bimwiq: 'Importer BIMWIQ (JSON)', export_ifc: 'Exporter IFC', settings: 'Réglages',
+    import_ifc: 'Importer IFC', export_ifc: 'Exporter IFC', settings: 'Réglages',
     assistant: 'Assistant IA', new_project: 'Nouveau',
     save: 'Sauvegarder', last_saved: 'Sauvegardé',
     plan_units: 'Unités', meters: 'mètres',
@@ -88,7 +88,7 @@ export const I18N: Record<LangType, I18nDict> = {
     no_selection: 'No selection', click_to_select: 'Click an element in the plan or tree to view properties',
     geometry: 'Geometry', metadata: 'Metadata', psets: 'Property Sets (IFC)',
     add: 'Add', delete: 'Delete', duplicate: 'Duplicate',
-    import_ifc: 'Import IFC', import_bimwiq: 'Import BIMWIQ (JSON)', export_ifc: 'Export IFC', settings: 'Settings',
+    import_ifc: 'Import IFC', export_ifc: 'Export IFC', settings: 'Settings',
     assistant: 'AI Assistant', new_project: 'New',
     save: 'Save', last_saved: 'Saved',
     plan_units: 'Units', meters: 'meters',

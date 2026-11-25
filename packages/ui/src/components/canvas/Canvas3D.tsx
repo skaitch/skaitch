@@ -1249,8 +1249,7 @@ export default function Canvas3D({ viewportRef, sectionToolHost, addItem, update
     const group = new THREE.Group();
     group.name = 'manual-items';
     // We only render items that don't seem to come from the current IFC meshes
-    // Include BIMWIQ items, which have no imported IFC meshes.
-    const isManual = (id: string) => /^(bimwiq|st|sl|slb|w|d|dr|wn|op|r|rm|rf|fur|tech|col|chm|ifc|ifcelement)_/.test(id) || id.includes('_ifc_');
+    const isManual = (id: string) => /^(st|sl|slb|w|d|dr|wn|op|r|rm|rf|fur|tech|col|chm|ifc|ifcelement)_/.test(id) || id.includes('_ifc_');
 
     const renderedManual: string[] = [];
 

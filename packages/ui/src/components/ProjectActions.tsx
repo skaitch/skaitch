@@ -13,15 +13,14 @@ const FORMATS = [
   ['png', 'High-Res PNG Image', '2D floorplan capture'],
 ] as const;
 
-export default function ProjectActions({ lang, onImport, onImportBimwiq, onImportSkaitch, onSync, onVerify, onExport }: {
-  lang: string; onImport: () => void; onImportBimwiq: () => void; onImportSkaitch: () => void; onSync: () => void; onVerify: () => void;
+export default function ProjectActions({ lang, onImport, onImportSkaitch, onSync, onVerify, onExport }: {
+  lang: string; onImport: () => void; onImportSkaitch: () => void; onSync: () => void; onVerify: () => void;
   onExport: (format: ExportFormat) => void;
 }) {
   const t = makeT(lang);
   return <>
     <ToolbarMenu label={t('File')} lang={lang}>
       <button className="toolbar-menu-action" data-menu-close onClick={onImport}><FileInput size={18}/>{t('import_ifc')}</button>
-      <button className="toolbar-menu-action" data-menu-close onClick={onImportBimwiq}><FileInput size={18}/>{t('import_bimwiq')}</button>
       <button className="toolbar-menu-action" data-menu-close onClick={onImportSkaitch}><FileInput size={18}/>{t('Import skAItch project (.skaitch)')}</button>
       <button className="toolbar-menu-action" data-menu-close onClick={onSync} title={t('Synchronize 3D view immediately with 2D modifications')}><RefreshCw size={18}/>{t('Sync IFC')}</button>
       <button className="toolbar-menu-action" data-menu-close onClick={onVerify} title={t('Check IFC round-trip')}><CircleCheck size={18}/>{t('Verify')}</button>

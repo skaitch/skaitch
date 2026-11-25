@@ -31,7 +31,7 @@ it('keeps an accessible settings entry on the projects home page', () => {
   const html = renderToStaticMarkup(createElement(HomePage, {
     projects: [], loading: false, user: { displayName: 'Test' } as User, lang: 'fr',
     onLogout: noop, onLangChange: noop, onOpen: noop, onCreate: noop, onEdit: noop,
-    onDuplicate: noop, onDelete: noop, onArchive: noop, onImportIFC: noop, onImportBimwiq: noop, onImportSkaitch: noop,
+    onDuplicate: noop, onDelete: noop, onArchive: noop, onImportIFC: noop, onImportSkaitch: noop,
     onLoadSample: noop, onSettings: noop,
   }));
   expect(html).toContain('aria-label="Réglages"');

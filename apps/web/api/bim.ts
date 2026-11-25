@@ -8,7 +8,7 @@ import { authenticateSession } from './_lib/sessionAuth.js';
 import { withUsage } from './_lib/usage.js';
 import { BIM_BODY_LIMIT, BIM_WIRE_LIMIT } from '@skaitch/core/types/bim';
 
-const operations = new Set(['import-ifc', 'import-bimwiq', 'export-ifc', 'patch-ifc', 'check-ifc', 'fix-ifc', 'mcp-model', 'mcp-batch', 'project-list', 'project-read', 'project-write', 'project-delete', 'mcp-read', 'mcp-settings', 'export-json', 'export-dxf']);
+const operations = new Set(['import-ifc', 'export-ifc', 'patch-ifc', 'check-ifc', 'fix-ifc', 'mcp-model', 'mcp-batch', 'project-list', 'project-read', 'project-write', 'project-delete', 'mcp-read', 'mcp-settings', 'export-json', 'export-dxf']);
 export default withUsage('bim', async function handler(req: any, res: any, usage) {
   res.setHeader('Cache-Control', 'private, no-store');
   const fail = (status: number, error: string) => {

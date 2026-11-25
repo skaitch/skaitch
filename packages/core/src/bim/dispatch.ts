@@ -3,7 +3,6 @@ import { readMcpModel } from './mcpRead.js';
 import { computeMcpBatch } from './mcpBatch.js';
 import { computeMcpModel } from './mcpModel.js';
 import { importIFCBuffer } from './importIFC.js';
-import { importBimwiq } from './importBimwiq.js';
 import { exportIFC } from './exportIFC.js';
 import { patchIFC } from './patchIFC.js';
 import { checkRoundTrip, fixRoundTripProblems } from './roundTripCheck.js';
@@ -12,7 +11,7 @@ import { MCP_MODEL_TOOLS, MCP_READ_TOOLS, type BimOperation } from '../types/bim
 import type { ItemsMap } from '../types/ifc.js';
 
 /** Operations computed by the BIM engine alone, without any storage. */
-export const ENGINE_OPERATIONS = ['import-ifc', 'import-bimwiq', 'export-ifc', 'patch-ifc', 'check-ifc', 'fix-ifc', 'mcp-model', 'mcp-read', 'mcp-batch', 'export-json', 'export-dxf'] as const;
+export const ENGINE_OPERATIONS = ['import-ifc', 'export-ifc', 'patch-ifc', 'check-ifc', 'fix-ifc', 'mcp-model', 'mcp-read', 'mcp-batch', 'export-json', 'export-dxf'] as const;
 export type EngineOperation = typeof ENGINE_OPERATIONS[number];
 
 export function isEngineOperation(operation: string | null | undefined): operation is EngineOperation {
@@ -38,8 +37,7 @@ export async function runBimOperation(operation: EngineOperation | BimOperation,
     result = { items: imported.items, rawStructure: imported.rawStructure, centerOffset: imported.centerOffset };
   } else {
     finiteData(input);
-    if (operation === 'import-bimwiq') result = importBimwiq(input);
-    else {
+    {
       const data = record(input);
       const items = validateItems(data.items);
       if (data.ifcText != null && typeof data.ifcText !== 'string') throw new InputError('Texte IFC invalide.');

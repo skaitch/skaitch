@@ -11,7 +11,7 @@ const noop = () => {};
 const home = (count: number, projectLimit?: number, archived = 0) => renderToStaticMarkup(createElement(HomePage, {
   projects: Array.from({ length: count }, (_, i) => ({ ...meta(`p${i}`), ...(i < archived ? { archivedAt: '2026-11-20' } : {}) })), user: null, lang: 'fr', onLangChange: noop,
   onOpen: noop, onCreate: noop, onEdit: noop, onDuplicate: noop, onDelete: noop, onArchive: noop, onImportIFC: noop,
-  onImportBimwiq: noop, onImportSkaitch: noop, onSettings: noop, onLoadSample: noop, projectLimit,
+  onImportSkaitch: noop, onSettings: noop, onLoadSample: noop, projectLimit,
 }));
 
 it('caps web accounts at three projects and leaves unlimited hosts alone', () => {

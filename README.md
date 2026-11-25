@@ -394,7 +394,7 @@ name, phase and coordinates) stay in the editor.
 
 ### Server BIM engines
 
-IFC/BIMWIQ imports, IFC export and synchronisation, and round-trip
+IFC imports, IFC export and synchronisation, and round-trip
 checks run through an authenticated API. Browser wrappers are
 asynchronous; they no longer contain the engines. See
 [the browser/server split and its limits](docs/architecture/bim-server.md).

@@ -11,7 +11,7 @@ it('keeps history availability and assistant state accessible in the shared head
     projectName: 'Maison · niveau principal', lang: 'fr', onHome: noop, undo: noop, redo: noop,
     canUndo: false, canRedo: true, onAssistant: noop, assistantOpen: true,
     options: createElement('button', {}, 'Réglages'),
-    actions: createElement(ProjectActions, { lang: 'fr', onImport: noop, onImportBimwiq: noop, onImportSkaitch: noop, onSync: noop, onVerify: noop, onExport: noop }),
+    actions: createElement(ProjectActions, { lang: 'fr', onImport: noop, onImportSkaitch: noop, onSync: noop, onVerify: noop, onExport: noop }),
   }));
   expect(html).toContain('<header');
   expect(html).toContain('title="Maison · niveau principal"');

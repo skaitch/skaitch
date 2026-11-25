@@ -1,6 +1,6 @@
 # Server-side BIM processing
 
-The migration moves the IFC and BIMWIQ import engines, IFC export,
+The migration moves the IFC import engine, IFC export,
 IFC synchronisation and round-trip check/fix into `server/bim/`.
 The matching `src/lib/` modules are now asynchronous HTTP clients.
 The build fails if a `server/bim/` engine ends up in a browser chunk.
@@ -15,7 +15,7 @@ import/export processing stay in memory during the request. Project operations
 save the model in Firestore through Firebase Admin, under the account of the checked
 token. No uid supplied in the request body is used.
 
-Operations: `import-ifc`, `import-bimwiq`, `export-ifc`, `patch-ifc`, `check-ifc`,
+Operations: `import-ifc`, `export-ifc`, `patch-ifc`, `check-ifc`,
 `fix-ifc`, `mcp-model`, `mcp-read`, `mcp-settings`, `project-list`, `project-write`,
 `project-delete`. The IFC import receives the file bytes; the other operations
 receive JSON. Exchanges are gzip-compressed. Responses are not

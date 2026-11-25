@@ -4,7 +4,6 @@ import type { SkaitchPlatform } from './platform';
 import './lib/appTheme'; // applies the colour theme at start-up
 import { renameProjectItems } from '@skaitch/core/lib/projectName';
 import { canAddProject, PROJECT_LIMIT_MESSAGE } from '@skaitch/core/lib/projectLimit';
-import { importBimwiq } from './lib/importBimwiq';
 import { nextFrame, validateViewRequest, type ViewportApi } from './lib/viewport';
 import SavedSectionsMenu from './components/SavedSectionsMenu';
 import EditorHeader from './components/EditorHeader';
@@ -750,17 +749,11 @@ export default function SkaitchApp({ platform }: { platform: SkaitchPlatform }) 
     importInputRef.current.click();
   }, [refuseNewProject]);
 
-  const handleImportBimwiq = useCallback(() => {
-    if (!importInputRef.current || refuseNewProject()) return;
-    importInputRef.current.accept = '.json';
-    importInputRef.current.click();
-  }, [refuseNewProject]);
-
   const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
-    const createsProject = screen === 'home' || /\.json$/i.test(file.name) || file.name.toLowerCase().endsWith(SKAITCH_EXTENSION);
+    const createsProject = screen === 'home' || file.name.toLowerCase().endsWith(SKAITCH_EXTENSION);
     if (createsProject && refuseNewProject()) return;
     try {
       const buffer = await file.arrayBuffer();
@@ -773,17 +766,14 @@ export default function SkaitchApp({ platform }: { platform: SkaitchPlatform }) 
         await handleOpenProject(created);
         return;
       }
-      const isBimwiq = /\.json$/i.test(file.name);
-      setImportProgress({ phase: isBimwiq ? 'Import BIMWIQ sur le serveur…' : 'Import IFC sur le serveur…', pct: 10 });
-      const result: ImportResult = isBimwiq
-        ? await importBimwiq(JSON.parse(new TextDecoder().decode(buffer)))
-        : await importIFCBuffer(buffer, setImportProgress);
-      if (screen === 'home' || isBimwiq) {
-        const proj = await createProject(file.name.replace(/\.(ifc|json)$/i, ''), isBimwiq ? 'Import partiel BIMWIQ' : 'Importé depuis IFC');
+      setImportProgress({ phase: 'Import IFC sur le serveur…', pct: 10 });
+      const result: ImportResult = await importIFCBuffer(buffer, setImportProgress);
+      if (screen === 'home') {
+        const proj = await createProject(file.name.replace(/\.ifc$/i, ''), 'Importé depuis IFC');
         result.items = renameProjectItems(result.items, proj.name);
         await saveProject(proj.id, result.items);
         if (result.rawIfcBuffer) await saveIfcBuffer(proj.id, result.rawIfcBuffer);
-        setRawIfcBuffer(isBimwiq ? null : result.rawIfcBuffer ?? buffer);
+        setRawIfcBuffer(result.rawIfcBuffer ?? buffer);
         replaceItems(result.items, true);
         setRawIfcStructure(result.rawStructure);
         setIfcMeshes(result.meshes);
@@ -805,7 +795,6 @@ export default function SkaitchApp({ platform }: { platform: SkaitchPlatform }) 
         persistUi({ camera3d: null });
         setFocusStorey(Object.values(result.items).find((i) => i.type === 'Storey')?.id ?? 'sty_A0');
       }
-      if (isBimwiq) alert('Import BIMWIQ partiel : niveaux, murs, pièces, portes et fenêtres. Dalles, toiture, terrain et données thermiques non importés. Position des axes de murs approximative.');
     } catch (err) {
       console.error('Import failed', err);
       alert(makeT(lang)('IFC import error: {error}', { error: String(err) }));
@@ -1002,7 +991,6 @@ export default function SkaitchApp({ platform }: { platform: SkaitchPlatform }) 
           onDelete={(id) => deleteProject(id)}
           onArchive={(id, archived) => { setArchived(id, archived).catch(error => alert(error instanceof Error ? error.message : String(error))); }}
           onImportIFC={handleImportIFC}
-          onImportBimwiq={handleImportBimwiq}
           onImportSkaitch={handleImportSkaitch}
           onLoadSample={handleLoadSample}
           onSettings={() => setSettingsOpen(true)}
@@ -1095,7 +1083,7 @@ export default function SkaitchApp({ platform }: { platform: SkaitchPlatform }) 
     projectName={activeProject?.name ?? proj?.name ?? ''} lang={lang}
     onHome={handleGoHome} undo={undo} redo={redo} canUndo={canUndo} canRedo={canRedo}
     onAssistant={() => setChatOpen(o => !o)} assistantOpen={chatOpen}
-    actions={<ProjectActions lang={lang} onImport={handleImportIFC} onImportBimwiq={handleImportBimwiq} onImportSkaitch={handleImportSkaitch} onSync={syncIfc} onVerify={verifyIfc} onExport={exportProject} />}
+    actions={<ProjectActions lang={lang} onImport={handleImportIFC} onImportSkaitch={handleImportSkaitch} onSync={syncIfc} onVerify={verifyIfc} onExport={exportProject} />}
     context={isMobile && <label className="header-storey"><span>{t('storey')}</span>
       <select value={focusStorey} onChange={e => setFocusStorey(e.target.value)}>
         {storeys.map(storey => <option key={storey.id} value={storey.id}>{storey.name}</option>)}
