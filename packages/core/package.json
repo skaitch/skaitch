@@ -1,0 +1,31 @@
+{
+  "name": "@skaitch/core",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./data/locales/*": {
+      "@skaitch/source": "./src/data/locales/*",
+      "default": "./dist/data/locales/*"
+    },
+    "./*": {
+      "@skaitch/source": "./src/*.ts",
+      "default": "./dist/*.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@types/node": "26.6.6",
+    "@types/three": "^0.187.0",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "fflate": "0.8.3",
+    "three": "^0.187.0",
+    "web-ifc": "0.0.77"
+  },
+  "license": "MPL-2.0"
+}

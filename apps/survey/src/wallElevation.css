@@ -1,0 +1,183 @@
+.surface-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  background: #0a0a0a;
+}
+.surface-header-spacer { width: 38px; flex: 0 0 auto; }
+.survey-screen .surface-controls { flex-wrap: wrap; gap: 8px; padding: 12px 14px 10px; }
+.surface-picker { position: relative; display: flex; min-width: 0; flex: 1 1 115px; }
+.surface-picker select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  appearance: none;
+  padding: 8px 12px;
+  padding-inline-end: 32px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #f6f6f6;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+}
+.surface-picker > svg {
+  position: absolute;
+  inset-inline-end: 10px;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+.surface-switch { display: flex; gap: 5px; }
+.surface-switch .room-pill { min-height: 44px; display: flex; align-items: center; gap: 5px; }
+.surface-switch .room-pill[aria-pressed="true"] { background: var(--theme); border-color: var(--theme); color: var(--theme-ink); }
+.surface-photo-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.surface-photo-actions > button { min-height: 44px; }
+.surface-photos .empty-state > svg { color: var(--muted); }
+.surface-photos .empty-state p { margin: 8px 0 0; }
+.surface-photos .photo-card .surface-photo-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: start;
+}
+
+.wall-elevation {
+  --wall-stroke: color-mix(in srgb, var(--theme) 62%, #2c2c2c);
+  --wall-fill: color-mix(in srgb, var(--theme) 8%, white);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+}
+.wall-elevation-workspace {
+  container-type: size;
+  position: relative;
+  flex: 1 0 150px;
+  display: grid;
+  place-items: center;
+  background-image: linear-gradient(#e7e7e7 1px, transparent 1px), linear-gradient(90deg, #e7e7e7 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center;
+}
+.wall-elevation-stage {
+  --bg: var(--paper);
+  position: relative;
+  width: min(calc(100% - 56px), calc((100cqh - 72px) * var(--wall-ratio)));
+  aspect-ratio: var(--wall-ratio);
+  border: 2px solid var(--wall-stroke);
+  border-bottom-width: 3px;
+  background: var(--wall-fill);
+}
+.wall-size {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--wall-stroke) 22%, white);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.wall-elevation-place { position: absolute; inset: 0; width: 100%; background: transparent; border: 0; cursor: crosshair; }
+.wall-elevation-workspace[data-placing="true"] .wall-elevation-stage { border-color: var(--theme); }
+.wall-elevation-openings { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.wall-elevation-opening { position: absolute; background: var(--paper); border: 1px solid var(--wall-stroke); }
+.wall-elevation-opening[data-kind="window"] {
+  background: color-mix(in srgb, var(--theme) 15%, white);
+  box-shadow: inset 0 0 0 2px white;
+}
+.wall-elevation-point {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 1px solid color-mix(in srgb, var(--wall-stroke) 25%, white);
+  border-radius: 50%;
+  background: var(--paper);
+  touch-action: none;
+  cursor: grab;
+}
+.wall-elevation-point[data-incomplete="true"] { border-style: dashed; border-color: #9b692a; }
+.wall-elevation-point[aria-pressed="true"] { z-index: 3; outline: 2px solid var(--wall-stroke); }
+.wall-elevation-cotes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.wall-elevation-cotes path { fill: none; stroke: var(--wall-stroke); stroke-dasharray: 3 3; }
+.wall-elevation-dock { display: grid; gap: 7px; padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); }
+.wall-elevation-dock .wall-point-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 12px;
+}
+.wall-point-tools > button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  border-radius: 999px;
+}
+.wall-point-tools > .wall-model-button {
+  --bg: transparent;
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: flex-start;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  background: #f6f6f6;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 750;
+}
+.wall-model-button span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: start; }
+.wall-model-button svg { flex: 0 0 auto; }
+.furniture-tools.tools-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+}
+.wall-catalogue-disciplines .choice { display: flex; align-items: center; gap: 8px; min-height: 50px; padding: 9px 11px; }
+.wall-catalogue-disciplines .choice b { margin: 0; }
+.wall-catalogue-disciplines .symbol { display: flex; }
+.wall-catalogue-symbol { --bg: transparent; }
+.catalog-choice.active .wall-catalogue-symbol { color: var(--theme-ink); }
+.wall-catalogue-actions { position: sticky; bottom: 0; padding: 8px 0; background: var(--paper); }
+.wall-selection-bar .selection-head { flex-wrap: wrap; }
+.wall-selection-bar .selection-head b { flex: 1; white-space: normal; }
+.wall-selection-bar .selection-ico { --bg: transparent; }
+.wall-selection-bar .tag { padding: 4px 6px; background: #fff2df; color: #835414; font-size: 9px; }
+.wall-selection-bar .selection-close { width: 36px; height: 36px; }
+.wall-selection-bar .selection-tools .tool { min-height: 62px; color: #575757; }
+.wall-selection-bar .selection-tools .tool.danger { color: #b0523a; }
+.wall-selection-bar .tool .ico { height: 19px; }
+.wall-selection-bar .tool b { font-size: 11px; color: var(--ink); }
+.wall-point-problem { margin: 2px 7px 6px; color: #835414; font-size: 11px; }
+.wall-cote-form { padding: 5px 8px 7px; }
+.wall-cote-form .sheet-actions { margin-top: 9px; }
+.surface-screen :is(button, select):focus-visible { outline: 2px solid var(--wall-stroke, var(--theme)); outline-offset: 2px; }

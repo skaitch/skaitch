@@ -1,0 +1,40 @@
+@import "tailwindcss";
+@import "@skaitch/ui/styles.css";
+@source "../../../../packages/ui/src";
+@source "./";
+
+/* MCP remote access warning (RemoteAccessBanner): stays visible while access is open. */
+.remote-access-banner {
+  position: fixed; left: 10px; bottom: 10px; z-index: 10000; max-width: calc(100vw - 20px);
+  display: flex; gap: 8px; align-items: center; padding: 4px 12px; border-radius: 999px;
+  background: oklch(0.45 0.17 25); color: #fff; font-size: 12px; pointer-events: auto;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+.remote-access-banner strong { font-weight: 700; }
+
+/* Desktop settings modal (DesktopSettings.tsx). */
+.desktop-settings-section { display: flex; flex-direction: column; gap: 10px; }
+.desktop-settings-plugin {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px; border: 1px solid var(--border-faint); border-radius: var(--r-md); font-size: 13px;
+}
+.desktop-settings-plugin > div { flex: 1 1 240px; }
+.desktop-settings-plugin .desktop-settings-note { margin-top: 3px; }
+.desktop-settings-plugin .btn { min-height: 34px; }
+.desktop-settings-row { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+.desktop-settings-row > span { width: 96px; color: var(--ink-3); }
+.desktop-settings-row select { height: 28px; border: 1px solid var(--border); border-radius: 4px; padding: 0 6px; background: var(--bg); color: var(--ink); }
+.desktop-settings-row > span { flex: none; }
+.desktop-settings-row input { flex: 1; min-width: 0; height: 28px; border: 1px solid var(--border); border-radius: 4px; padding: 0 8px; background: var(--bg); color: var(--ink); font-family: var(--font-mono); font-size: 11.5px; }
+.desktop-settings-toggle { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; font-size: 12px; }
+.desktop-settings-toggle input { margin-top: 2px; }
+.desktop-settings-toggle span { display: flex; flex-direction: column; gap: 2px; }
+.desktop-settings-toggle small { color: var(--ink-3); font-size: 11.5px; }
+.desktop-settings-status { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 12px; }
+.desktop-settings-status span { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-4); }
+.desktop-settings-status[data-on="true"] span { background: oklch(0.65 0.16 145); }
+.desktop-settings-warning { margin: 0; padding: 8px 10px; border-radius: 6px; background: oklch(0.95 0.04 25); color: oklch(0.4 0.15 25); font-size: 12px; }
+.desktop-settings-note { margin: 0; color: var(--ink-3); font-size: 12px; }
+.desktop-settings-snippet { border: 1px solid var(--border-faint); border-radius: 6px; overflow: hidden; }
+.desktop-settings-snippet > div { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 4px 10px; font-size: 11.5px; background: var(--panel-2); }
+.desktop-settings-snippet pre { margin: 0; padding: 8px 10px; font-family: var(--font-mono); font-size: 11px; white-space: pre-wrap; word-break: break-all; }

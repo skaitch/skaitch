@@ -1,0 +1,38 @@
+{
+  "name": "@skaitch/survey",
+  "private": true,
+  "version": "0.9.0",
+  "type": "module",
+  "description": "skAItch Survey: relevé mobile hors ligne (Capacitor, ADR 0007)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json && vite build",
+    "typecheck": "tsc -p tsconfig.json",
+    "cap:sync": "pnpm run build && cap sync",
+    "android": "pnpm run cap:sync && cap open android",
+    "ios": "pnpm run cap:sync && cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/core": "^8.6.2",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/ios": "^8.6.2",
+    "@capacitor/share": "^8.0.3",
+    "@skaitch/core": "workspace:*",
+    "@skaitch/ui": "workspace:*",
+    "idb-keyval": "^6.3.0",
+    "jsqr": "1.4.0",
+    "lucide-react": "^1.69.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6"
+  },
+  "license": "AGPL-3.0-only"
+}

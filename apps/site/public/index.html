@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>skAItch — from floor plan to IFC model, in one conversation</title>
+  <meta name="description" content="skAItch is an AI-driven IFC4 BIM editor, MCP4IFC-compatible. Turn a 2D floor plan into an IFC model through chat or MCP, and import your skAItch Survey site surveys." />
+  <meta name="theme-color" content="#0D2B4A" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="brand/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="skAItch — from floor plan to IFC model" />
+  <meta property="og:description" content="AI-driven IFC4 BIM editor: chat, MCP, mobile site survey, IFC import and export." />
+  <meta property="og:image" content="og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..900&family=Geist+Mono:wght@400..700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="nav.skip">Skip to content</a>
+
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="#top" aria-label="skAItch">
+        <svg viewBox="6 7 52 52" aria-hidden="true"><path d="M14 9H50Q56 9 56 15V41Q56 47 50 47H26L14 57V47Q8 47 8 41V15Q8 9 14 9Z" fill="#FFB000"/><path d="M17 17H47V39H17Z M32 17V27 M17 29H25" fill="none" stroke="#0D2B4A" stroke-width="3.6" stroke-linecap="square"/></svg>
+        <span class="wordmark">sk<b>ai</b>tch</span>
+      </a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#modes" data-i18n="nav.modes">How it works</a>
+        <a href="#products" data-i18n="nav.products">Products</a>
+        <a href="#editor" data-i18n="nav.editor">Editor</a>
+        <a href="#videos" data-i18n="nav.videos">Videos</a>
+        <a href="#download" data-i18n="nav.download">Download</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="lang" id="lang" type="button" aria-label="Français">FR</button>
+        <a class="btn btn-amber btn-sm" data-href="app" href="https://app.skaitch.online/" data-i18n="nav.open">Open skAItch</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap">
+        <h1 data-i18n="hero.title">From floor plan to IFC model, in one conversation.</h1>
+        <div class="hero-row">
+          <p class="lead" data-i18n="hero.lead">skAItch is an IFC4 BIM editor you drive by talking. Give it a plan, an instruction or a site survey: the AI models walls, openings and rooms, and you keep control of every element.</p>
+          <div class="hero-cta">
+            <a class="btn btn-amber" data-href="app" href="https://app.skaitch.online/" data-i18n="hero.try">Try it in the browser</a>
+            <a class="btn btn-line" href="#download" data-i18n="hero.download">Download the app</a>
+          </div>
+        </div>
+
+        <figure class="sheet" aria-label="A 2D floor plan converted into an IFC model by the assistant in skAItch" data-i18n-aria="hero.sheetAria">
+          <div class="sheet-body">
+            <div class="pane pane-plan">
+              <p class="pane-cap" data-i18n="sheet.plan">Imported plan</p>
+              <img class="shot" src="media/sample-plan.png" width="1840" height="1624" alt="Ground floor plan of a 10 × 8 m house with six rooms" data-i18n-alt="sheet.planAlt" />
+            </div>
+            <div class="pane pane-model">
+              <p class="pane-cap" data-i18n="sheet.model">IFC4 model in skAItch</p>
+              <div class="media" id="build-media">
+                <video id="build-video" src="media/build.mp4" poster="media/model-3d.jpg" width="1200" height="1000" autoplay muted loop playsinline preload="metadata" aria-label="skAItch building the IFC model from the plan, element by element, then a 3D view of the house" data-i18n-aria="sheet.videoAria"></video>
+              </div>
+            </div>
+            <div class="pane pane-log">
+              <p class="pane-cap" data-i18n="sheet.log">Claude Haiku, over skAItch MCP</p>
+              <p class="prompt" data-i18n="sheet.prompt">“Convert this plan into an IFC model, 2.80 m walls.”</p>
+              <ol class="log">
+                <li style="--d:0"><code>select_storey</code><span data-i18n="sheet.level">Ground floor</span></li>
+                <li style="--d:1"><code>create_wall</code><span>×9</span></li>
+                <li style="--d:2"><code>create_window</code><span>×9</span></li>
+                <li style="--d:3"><code>create_door</code><span>×6</span></li>
+                <li style="--d:4"><code>create_space</code><span>×6</span></li>
+                <li style="--d:5"><code>create_furniture</code><span>×11</span></li>
+                <li style="--d:6"><code>create_dimension</code><span>×10</span></li>
+                <li style="--d:7"><code>create_roof</code><span data-i18n="sheet.roof">gable, 35°</span></li>
+                <li style="--d:8" class="done"><code>export_ifc</code><span>sample-house.ifc</span></li>
+              </ol>
+            </div>
+          </div>
+          <table class="cartouche">
+            <tr>
+              <td><small data-i18n="cart.project">Project</small><span data-i18n="cart.projectV">Sample house</span></td>
+              <td><small data-i18n="cart.level">Level</small><span data-i18n="sheet.level">Ground floor</span></td>
+              <td><small data-i18n="cart.scale">Scale</small><span>1:100</span></td>
+              <td><small>Format</small><span>IFC4</span></td>
+              <td class="cart-brand"><small data-i18n="cart.by">Modelled with</small><span>skAItch</span></td>
+            </tr>
+          </table>
+        </figure>
+        <p class="credit" data-i18n="hero.credit">Real screenshots: Claude Haiku, at low effort, read this plan and built the IFC model through skAItch’s local MCP server. Sample plan drawn for this site and released under CC0.</p>
+      </div>
+    </section>
+
+    <section class="modes" id="modes">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 data-i18n="modes.title">Three ways to build the model.</h2>
+          <p data-i18n="modes.lead">Start from whatever you have at hand: an idea, a plan or a site survey.</p>
+        </header>
+
+        <article class="mode">
+          <div class="mode-text">
+            <h3 data-i18n="mode.chat.t">In the editor’s chat</h3>
+            <p data-i18n="mode.chat.d">Write what you want. The assistant changes the model in front of you, with the AI provider of your choice, and every element stays editable with the mouse.</p>
+          </div>
+          <div class="mode-visual chat" aria-hidden="true">
+            <p class="bubble me" data-i18n="mode.chat.q">Add a 7 cm partition between the kitchen and the living room, with an 83 cm door.</p>
+            <p class="bubble ai"><span data-i18n="mode.chat.a">Partition created, door placed 40 cm from the front wall.</span> <code>IfcWall #218</code> <code>IfcDoor #219</code></p>
+          </div>
+        </article>
+
+        <article class="mode">
+          <div class="mode-text">
+            <h3 data-i18n="mode.mcp.t">From Claude or any MCP client</h3>
+            <p data-i18n="mode.mcp.d">skAItch exposes its tools over MCP, MCP4IFC-compatible: storeys, walls, slabs, roofs, stairs, furniture, sections and sheets. Your agent reads the calibrated plan, measures, then builds the model.</p>
+          </div>
+          <pre class="mode-visual code" aria-hidden="true"><span class="c">// the call that drew the house's north facade</span>
+<b>create_wall</b>({
+  storey_id: <i>"sty_A0"</i>,
+  start_point: [<i>1599</i>, <i>241</i>], end_point: [<i>241</i>, <i>241</i>],
+  coordinates_in_pixels: <i>true</i>,
+  thickness: <i>0.3</i>, height: <i>2.8</i>, is_external: <i>true</i>
+})
+<span class="ok">✓ IfcWall "North facade" created</span></pre>
+        </article>
+
+        <article class="mode">
+          <div class="mode-text">
+            <h3 data-i18n="mode.survey.t">From a skAItch Survey</h3>
+            <p data-i18n="mode.survey.d">On site, the mobile app records measurements and photos, even offline. Back at the office, import the survey into the storey, or receive it straight in your account.</p>
+          </div>
+          <div class="mode-visual phone">
+            <div class="phone-frame">
+              <video src="media/survey-demo.mp4" poster="media/survey-room.jpg" width="600" height="1256" autoplay muted loop playsinline preload="metadata" aria-label="skAItch Survey on a phone: picking rooms zooms onto them, a window is selected, then the global plan of the six measured rooms" data-i18n-aria="mode.survey.videoAria"></video>
+            </div>
+          </div>
+        </article>
+        <div class="survey-shots">
+          <figure><div class="phone-frame"><img src="media/survey-home.jpg" width="780" height="1632" loading="lazy" alt="List of surveys, each with its avatar" data-i18n-alt="shots.home.alt" /></div><figcaption data-i18n="shots.home">Your surveys, archived with a swipe</figcaption></figure>
+          <figure><div class="phone-frame"><img src="media/survey-opening.jpg" width="780" height="1632" loading="lazy" alt="A window selected on the room plan, with its toolbar" data-i18n-alt="shots.opening.alt" /></div><figcaption data-i18n="shots.opening">Doors and windows edited on the plan</figcaption></figure>
+          <figure><div class="phone-frame"><img src="media/survey-global.jpg" width="780" height="1632" loading="lazy" alt="Global plan: six rooms placed by their shared walls" data-i18n-alt="shots.global.alt" /></div><figcaption data-i18n="shots.global">Rooms placed together by measurements</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="products" id="products">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 data-i18n="prod.title">One model, three tools.</h2>
+          <p data-i18n="prod.lead">The online editor, the desktop app and the site-survey app share the same engine and the same IFC4 model.</p>
+        </header>
+        <div class="prod-grid">
+        <article class="product">
+          <p class="prod-tag" data-i18n="prod.online.tag">In the browser</p>
+          <h3>skAItch Online</h3>
+          <p class="prod-lead" data-i18n="prod.online.d">The full editor at app.skaitch.online, with nothing to install. Your projects are saved to your account.</p>
+          <ul class="prod-feats">
+            <li data-i18n="prod.online.f1">IFC4 import and export</li>
+            <li data-i18n="prod.online.f2">2D plan, 3D view and IFC browser</li>
+            <li data-i18n="prod.online.f3">AI chat with the provider of your choice</li>
+            <li data-i18n="prod.online.f4">Cloud MCP server for Claude and other agents</li>
+            <li data-i18n="prod.online.f5">Receives surveys sent from a paired phone</li>
+          </ul>
+          <div class="prod-btns">
+            <a class="btn btn-amber btn-sm" data-href="app" href="https://app.skaitch.online/" data-i18n="prod.online.cta">Open</a>
+            <a class="btn btn-line btn-sm" data-doc="online" data-i18n="prod.doc">Documentation</a>
+          </div>
+        </article>
+        <article class="product">
+          <p class="prod-tag" data-i18n="prod.app.tag">Windows, macOS, Linux</p>
+          <h3>skAItch App</h3>
+          <p class="prod-lead" data-i18n="prod.app.d">The same editor as a desktop application, working on local files.</p>
+          <ul class="prod-feats">
+            <li data-i18n="prod.app.f1">Projects stored on your disk</li>
+            <li data-i18n="prod.app.f2">Local MCP server for Claude Desktop and Claude Code</li>
+            <li data-i18n="prod.app.f3">Plan import, sheets, sections and dimensions</li>
+            <li data-i18n="prod.app.f4">Optional diagnostic log for AI requests</li>
+            <li data-i18n="prod.app.f5">Installers for x64 and Apple Silicon</li>
+          </ul>
+          <div class="prod-btns">
+            <a class="btn btn-amber btn-sm" href="#download" data-i18n="prod.app.cta">Download</a>
+            <a class="btn btn-line btn-sm" data-doc="app" data-i18n="prod.doc">Documentation</a>
+          </div>
+        </article>
+        <article class="product">
+          <p class="prod-tag" data-i18n="prod.survey.tag">Android and iOS</p>
+          <h3>skAItch Survey</h3>
+          <p class="prod-lead" data-i18n="prod.survey.d">The site-survey app: measure each room on your phone, then bring the survey into skAItch.</p>
+          <ul class="prod-feats">
+            <li data-i18n="prod.survey.f1">Works fully offline</li>
+            <li data-i18n="prod.survey.f2">Walls, openings and photos per room</li>
+            <li data-i18n="prod.survey.f3">Rooms placed together through their shared walls</li>
+            <li data-i18n="prod.survey.f4">Photos re-encoded without location data</li>
+            <li data-i18n="prod.survey.f5">Export as a file or send to your account</li>
+          </ul>
+          <div class="prod-btns">
+            <a class="btn btn-amber btn-sm" href="#download" data-i18n="prod.survey.cta">Get the app</a>
+            <a class="btn btn-line btn-sm" data-doc="survey" data-i18n="prod.doc">Documentation</a>
+          </div>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="editor" id="editor">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 data-i18n="editor.title">A real IFC4 editor, not a demo.</h2>
+        </header>
+        <figure class="app-shot">
+          <img src="media/app-plan-2d.png" width="1800" height="1045" loading="lazy" alt="skAItch desktop: the sample house modelled over its imported plan, with the project tree" data-i18n-alt="editor.alt" />
+        </figure>
+        <dl class="caps">
+          <div><dt data-i18n="cap.ifc.t">IFC4 import and export</dt><dd data-i18n="cap.ifc.d">Open existing files and hand back standard IFC, readable by the BIM software on the market.</dd></div>
+          <div><dt data-i18n="cap.walls.t">Walls, openings, rooms</dt><dd data-i18n="cap.walls.d">Wall connections, parametric doors and windows, computed room areas.</dd></div>
+          <div><dt data-i18n="cap.roofs.t">Roofs, slabs, stairs</dt><dd data-i18n="cap.roofs.d">Pitched roofs, slabs from an outline, straight, quarter-turn or spiral stairs.</dd></div>
+          <div><dt data-i18n="cap.sheets.t">Sheets and sections</dt><dd data-i18n="cap.sheets.d">Plan views, sections and dimensions laid out, ready to export and print.</dd></div>
+          <div><dt data-i18n="cap.desk.t">Web and desktop</dt><dd data-i18n="cap.desk.d">In the browser, or as an app for Windows, macOS and Linux.</dd></div>
+          <div><dt data-i18n="cap.lang.t">Eleven languages</dt><dd data-i18n="cap.lang.d">English, French, German, Spanish, Arabic, Chinese, Japanese and four more.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="render" id="render">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 data-i18n="render.title">From the 3D view to a photo.</h2>
+          <p data-i18n="render.lead">The viewpoint comes straight from skAItch’s 3D view, captured over MCP. An image model then dresses it with materials, light and garden, without moving a wall.</p>
+        </header>
+        <div class="render-pair">
+          <figure>
+            <img src="media/view-front.jpg" width="995" height="852" loading="lazy" alt="Front of the sample house in skAItch’s 3D view, at eye level" data-i18n-alt="render.inAlt" />
+            <figcaption data-i18n="render.in">skAItch 3D view, captured over MCP</figcaption>
+          </figure>
+          <figure>
+            <img src="media/render-front.jpg" width="1400" height="1198" loading="lazy" alt="Photorealistic render of the same house: rendered walls, terracotta roof, oak door, lawn and gravel path" data-i18n-alt="render.outAlt" />
+            <figcaption data-i18n="render.out">AI render generated from that view</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="videos" id="videos">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 data-i18n="videos.title">On video.</h2>
+          <p data-i18n="videos.lead">Short demos, from getting started to importing a survey.</p>
+        </header>
+        <div class="video-grid" id="video-grid"></div>
+      </div>
+    </section>
+
+    <section class="download" id="download">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 data-i18n="dl.title">Download skAItch.</h2>
+          <p id="dl-soon" hidden data-i18n="dl.soon">Installers arrive with the first public release. Until then, skAItch runs entirely in the browser.</p>
+        </header>
+        <ul class="platforms">
+          <li data-os="web">
+            <div class="pf-name"><h3>Web</h3><span class="mine" data-i18n="dl.mine">Your system</span></div>
+            <p data-i18n="dl.web">Nothing to install. Recent Chrome, Edge, Firefox or Safari.</p>
+            <div class="pf-btns"><a class="btn btn-amber" data-href="app" href="https://app.skaitch.online/" data-i18n="dl.webBtn">Open skAItch</a></div>
+          </li>
+          <li data-os="windows">
+            <div class="pf-name"><h3>Windows</h3><span class="mine" data-i18n="dl.mine">Your system</span></div>
+            <p data-i18n="dl.win">x64 installer. Unsigned build: in SmartScreen, click “More info”, then “Run anyway”.</p>
+            <div class="pf-btns"><a class="btn btn-line" data-dl="windows">.exe x64</a></div>
+          </li>
+          <li data-os="mac">
+            <div class="pf-name"><h3>macOS</h3><span class="mine" data-i18n="dl.mine">Your system</span></div>
+            <p data-i18n="dl.mac">Unsigned build: right-click the app, then “Open” on first launch.</p>
+            <div class="pf-btns"><a class="btn btn-line" data-dl="mac?arch=arm64">Apple Silicon</a><a class="btn btn-line" data-dl="mac?arch=x64">Intel</a></div>
+          </li>
+          <li data-os="linux">
+            <div class="pf-name"><h3>Linux</h3><span class="mine" data-i18n="dl.mine">Your system</span></div>
+            <p data-i18n="dl.linux">Portable AppImage, or a .deb package for Debian and Ubuntu.</p>
+            <div class="pf-btns"><a class="btn btn-line" data-dl="linux?format=appimage">AppImage</a><a class="btn btn-line" data-dl="linux?format=deb">.deb</a></div>
+          </li>
+          <li data-os="mobile">
+            <div class="pf-name"><h3>skAItch Survey</h3><span class="mine" data-i18n="dl.mine">Your system</span></div>
+            <p data-i18n="dl.survey">The offline site-survey app for Android and iOS.</p>
+            <div class="pf-btns"><a class="btn btn-line" data-store="android">Android</a><a class="btn btn-line" data-store="ios">iOS</a></div>
+          </li>
+        </ul>
+        <p class="releases" id="dl-releases" hidden><a href="#" data-i18n="dl.releases">All releases and their notes</a></p>
+      </div>
+    </section>
+
+    <section class="closing" id="open-source">
+      <div class="wrap closing-in">
+        <h2 data-i18n="close.title">Your next IFC starts with a sentence.</h2>
+        <p data-i18n="close.lead">skAItch is open source: the application under the AGPL-3.0, the <code>packages/core</code> engine under the MPL-2.0 so other projects can reuse it.</p>
+        <div class="hero-cta">
+          <a class="btn btn-amber" data-href="app" href="https://app.skaitch.online/" data-i18n="close.try">Try skAItch</a>
+          <a class="btn btn-line" id="github" href="#">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+            <span id="github-label">GitHub</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>© 2026 skAItch</span>
+      <span data-i18n="foot.license">AGPL-3.0, engine under MPL-2.0</span>
+      <a data-href="app" href="https://app.skaitch.online/" data-i18n="foot.app">Online app</a>
+    </div>
+  </footer>
+
+  <template id="video-card">
+    <article class="video">
+      <div class="frame"><button class="play" type="button"><span class="tri"></span></button><span class="soon"></span></div>
+      <h3></h3>
+      <p></p>
+    </article>
+  </template>
+
+  <script src="i18n.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

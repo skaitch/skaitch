@@ -1,0 +1,12 @@
+{
+  "name": "skaitch-local",
+  "interface": { "displayName": "SkAItch" },
+  "plugins": [
+    {
+      "name": "skaitch",
+      "source": { "source": "local", "path": "./plugins/skaitch" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "door-french-double",
+    "type": "Door",
+    "category": "Portes-fenêtres",
+    "labelFr": "Porte-fenêtre double",
+    "labelEn": "Double French door",
+    "defaults": {
+      "width": 1.40,
+      "height": 2.15,
+      "swing": "left",
+      "OperationType": "DOUBLE_DOOR_SINGLE_SWING"
+    },
+    "iconKey": "door-double"
+  },
+  {
+    "id": "door-pocket",
+    "type": "Door",
+    "category": "Coulissante",
+    "labelFr": "Porte à galandage",
+    "labelEn": "Pocket door",
+    "defaults": {
+      "width": 0.80,
+      "height": 2.05,
+      "swing": "left",
+      "OperationType": "SLIDING"
+    },
+    "iconKey": "door-sliding"
+  },
+  {
+    "id": "win-triple-panel",
+    "type": "Window",
+    "category": "Grand format",
+    "labelFr": "Châssis 3 vantaux",
+    "labelEn": "Triple panel window",
+    "defaults": {
+      "width": 1.80,
+      "height": 1.35,
+      "sillHeight": 0.85,
+      "OperationType": "SLIDING"
+    },
+    "iconKey": "win-bay"
+  },
+  {
+    "id": "win-skylight",
+    "type": "Window",
+    "category": "Toiture",
+    "labelFr": "Châssis de toit (Velux)",
+    "labelEn": "Skylight window",
+    "defaults": {
+      "width": 0.78,
+      "height": 0.98,
+      "sillHeight": 1.20,
+      "OperationType": "FIXED"
+    },
+    "iconKey": "win-fixed"
+  }
+]

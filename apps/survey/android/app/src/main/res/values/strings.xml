@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">skAItch Survey</string>
+    <string name="title_activity_main">skAItch Survey</string>
+    <string name="package_name">app.skaitch.survey</string>
+    <string name="custom_url_scheme">app.skaitch.survey</string>
+</resources>

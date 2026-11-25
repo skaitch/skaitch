@@ -1,0 +1,99 @@
+# Builds the desktop installers and the Survey Android APK for each v* tag and attaches them to that tag's release.
+# The web server (apps/web/api/download.ts) serves them from the latest release.
+name: Desktop release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to (re)build, e.g. v0.4.0
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create the release if it does not exist yet
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" -R "$GITHUB_REPOSITORY" --verify-tag --title "$TAG" --generate-notes
+
+  build:
+    needs: release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            flag: --linux
+          - os: windows-latest
+            flag: --win
+          - os: macos-latest
+            flag: --mac
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.13.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --filter @skaitch/desktop...
+      - name: Build and package
+        working-directory: apps/desktop
+        run: pnpm run build && node scripts/package.mjs ${{ matrix.flag }}
+      - name: Upload the installers to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          files=(apps/desktop/release/out/skAItch-*.{exe,dmg,AppImage,deb})
+          [ ${#files[@]} -gt 0 ] || { echo "No installer produced"; exit 1; }
+          gh release upload "$TAG" "${files[@]}" -R "$GITHUB_REPOSITORY" --clobber
+
+  survey-android:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.13.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: pnpm install --frozen-lockfile --filter @skaitch/survey...
+      - name: Build the web bundle and sync it into the Android project
+        working-directory: apps/survey
+        run: pnpm run cap:sync
+      - name: Build the APK (debug-signed, for sideloading)
+        working-directory: apps/survey/android
+        run: ./gradlew assembleDebug --no-daemon
+      - name: Upload the APK to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp apps/survey/android/app/build/outputs/apk/debug/app-debug.apk "skAItch-Survey-${TAG#v}.apk"
+          gh release upload "$TAG" "skAItch-Survey-${TAG#v}.apk" -R "$GITHUB_REPOSITORY" --clobber

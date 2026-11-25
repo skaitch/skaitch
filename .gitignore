@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+
+# build outputs
+dist/
+dist-server/
+
+# Vercel
+.vercel/
+
+# env files — never commit secrets
+.env.local
+.env.*.local
+
+# editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+
+# scratch scripts and local dumps
+scratch/
+conversion_tests/
+
+# Local credentials and agent history
+.env*
+!.env.example
+.agentbridge/
+/test-proxy.js
+.vercel

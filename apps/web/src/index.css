@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import "@skaitch/ui/styles.css";
+@source "../../../packages/ui/src";
+@config "../tailwind.config.js";
+
+/* Web beta ribbon: diagonal across the top-right corner; clicks pass through to the controls under it. */
+.beta-banner {
+  position: fixed; top: 0; right: 0; z-index: 60;
+  width: 96px; height: 96px; overflow: hidden; pointer-events: none;
+}
+.beta-banner strong {
+  position: absolute; top: 18px; right: -34px; width: 136px; transform: rotate(45deg);
+  padding: 3px 0; text-align: center; background: var(--accent); color: var(--bg);
+  font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); opacity: 0.9;
+}
+
+/* Administration page (/admin, web only). */
+.admin-page { min-height: 100vh; background: var(--bg); color: var(--ink); padding: 24px 16px 48px; max-width: 1100px; margin: 0 auto; font-size: 14px; overflow: auto; }
+.admin-page h1 { font-size: 22px; font-weight: 700; margin: 0; }
+.admin-page h2 { font-size: 16px; font-weight: 600; margin: 0 0 12px; }
+.admin-page h3 { font-size: 13px; font-weight: 600; margin: 16px 0 8px; color: var(--ink-2); }
+.admin-header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.admin-actions, .admin-periods { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.admin-periods .btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
+.admin-block { border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--panel); padding: 16px; margin-bottom: 16px; }
+.admin-figures { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; }
+.admin-figures dt { color: var(--ink-3); font-size: 12px; }
+.admin-figures dd { margin: 0; font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.admin-scroll { overflow-x: auto; }
+.admin-table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.admin-table th, .admin-table td { text-align: right; padding: 6px 10px; border-bottom: 1px solid var(--border-faint); white-space: nowrap; }
+.admin-table th:first-child, .admin-table td:first-child { text-align: left; }
+.admin-table th { color: var(--ink-3); font-weight: 500; font-size: 12px; }
+.admin-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.admin-columns h3 { margin-top: 0; }
+.admin-empty, .admin-note { color: var(--ink-3); margin: 0; }
+.admin-note { font-size: 12px; margin-top: 8px; }
+
+/* Legal pages (/confidentialite). */
+.legal-page { min-height: 100vh; background: var(--bg); color: var(--ink); max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; font-size: 15px; line-height: 1.6; overflow: auto; }
+.legal-page h1 { font-size: 26px; font-weight: 700; margin: 16px 0 4px; }
+.legal-page h2 { font-size: 18px; font-weight: 600; margin: 28px 0 8px; }
+.legal-page ul { padding-left: 20px; list-style: disc; }
+.legal-page li { margin-bottom: 6px; }
+.legal-page a { color: var(--accent-strong); text-decoration: underline; }
+.legal-meta { color: var(--ink-3); font-size: 13px; }

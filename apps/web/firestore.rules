@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // usage_operations and usage_accounts (usage statistics, ADR 0005) have no rule:
+    // only Firebase Admin reads or writes them, through the administrators' API.
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      match /{collection}/{document=**} {
+        allow read: if request.auth != null && request.auth.uid == uid && collection != 'ai_credentials';
+        // Project models and their name catalog are written by Firebase Admin only.
+        allow write: if request.auth != null && request.auth.uid == uid
+          && collection != 'projects' && collection != 'metadata' && collection != 'mcp_sessions' && collection != 'ai_credentials';
+      }
+    }
+  }
+}

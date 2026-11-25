@@ -1,0 +1,3 @@
+# The `.skaitch` project file as the contract between web and desktop
+
+The desktop app works without an account: its projects are local `.skaitch` files, a ZIP archive holding `manifest.json` (with a mandatory `formatVersion`), `model.json`, `catalogue.json`, the original IFC and the background plans as images. The core reads and writes it and migrates between format versions. The web keeps Firestore at first and only gains export/import; it may later store this same file in Cloud Storage, which would prepare an optional synchronisation of the desktop. IFC alone was rejected as the native format because it does not represent the catalogue, free sections or background plans.
