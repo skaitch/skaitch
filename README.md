@@ -1,31 +1,101 @@
-# SkAItch
+# skaitch
 
-Online IFC4 BIM editor, **MCP4IFC**-compatible — create, import, export and edit digital building models with an AI.
+Open source IFC4 BIM tools driven by AI, **MCP4IFC**-compatible. skaitch is made of two apps
+that work together:
 
-The interface offers the same 11 languages as MeasureIt: French, English,
-German, Spanish, Portuguese, Italian, Dutch, Arabic, Chinese, Japanese and Russian.
-Choose the language from sign-in, the home page, the editor bar or
-**Settings → General**. The choice is remembered on this device and Arabic is shown
-right to left. Detailed documentation, some help texts and
-catalogue names remain in French or English.
+| App | What it is for |
+|-----|----------------|
+| **skaitch Desktop** | The BIM editor for Windows, macOS and Linux. Draw, import and export IFC, lay out sheets, and let your AI assistant model through a local MCP server. Projects stay on your computer. |
+| **skaitch Survey** | The offline mobile app (Android, iOS) to survey a building on site: rooms, walls, openings, dimensions and photos. The survey file is then imported into a storey in skaitch Desktop. |
 
-The skAItch Survey mobile app offers the same 11 languages, following the phone's language.
+Prefer not to install anything? **skaitch Online**, the same editor in the browser, is
+available at [skaitch.online](https://skaitch.online) (account required). See
+[skaitch Online](#skaitch-online-web-edition-self-hosted) to host it yourself.
+
+Both apps offer 11 languages: French, English, German, Spanish, Portuguese, Italian,
+Dutch, Arabic (right to left), Chinese, Japanese and Russian.
 
 ## Project model
 
 - **Free and open source.** The code is published under the AGPL (see [License](#license)).
   There is no paid edition today.
-- **Bring your own AI.** skAItch does not sell or resell AI. Each user connects their own
+- **Bring your own AI.** skaitch does not sell or resell AI. Each user connects their own
   provider key (Anthropic, OpenAI, Mistral…) or a local model (Ollama, any
-  OpenAI-compatible server). Usage is billed by that provider, not by skAItch.
-- **Self-hosting is possible.** The web app, its API and the desktop app can all be built
-  and run from this repository (see [Local installation](#local-installation) and
-  [Deploying on Vercel](#deploying-on-vercel)).
+  OpenAI-compatible server). Usage is billed by that provider, not by skaitch.
+- **Local first.** skaitch Desktop needs no account and no server; your projects are files
+  on your machine.
 - **Issues welcome, pull requests not merged for now.** See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
-## Requirements
+## skaitch Desktop
+
+### Install
+
+Download the installer for your system from the
+[latest release](../../releases/latest):
+
+| Platform | File |
+|---|---|
+| Windows x64 | `skAItch-<version>-win-x64.exe` |
+| macOS | `skAItch-<version>-mac-arm64.dmg` (Apple Silicon), `skAItch-<version>-mac-x64.dmg` (Intel) |
+| Linux x64 | `skAItch-<version>-linux-x86_64.AppImage`, `skAItch-<version>-linux-amd64.deb` |
+
+The installers are not code-signed yet. On Windows, SmartScreen asks for confirmation
+(**More info → Run anyway**). On macOS, right-click the app → **Open**, or run
+`xattr -dr com.apple.quarantine /Applications/skAItch.app`. There is no automatic
+update: download the new installer to upgrade.
+
+### Build from source
+
+```bash
+git clone <repo-url> && cd skaitch
+pnpm install --frozen-lockfile
+pnpm desktop                                     # build and start the app
+pnpm --filter @skaitch/desktop package           # installer for the current platform
+```
+
+See [apps/desktop/README.md](apps/desktop/README.md) for packaging and releases.
+
+### Connect your AI assistant (local MCP)
+
+While skaitch Desktop is open, an MCP client (Claude Desktop, Claude Code, Codex…) can read
+and change the open project. The server only listens on your machine, at a private address
+shown in **Settings → MCP server**:
+
+```
+http://127.0.0.1:3923/mcp/<token>
+```
+
+Keep this address private: it gives access to your projects. The
+[`skaitch-mcp` skill](plugins/skaitch) teaches the assistant how to use the tools.
+
+---
+
+## skaitch Survey
+
+Offline survey app for Android and iOS. A survey is saved on the phone as you go and
+exported as a `.skaitch-survey` file (photos included, EXIF removed), then imported from a
+storey's **Survey** tab in skaitch Desktop.
+
+```bash
+pnpm --filter @skaitch/survey dev        # try it in a browser: http://localhost:5175
+pnpm --filter @skaitch/survey cap:sync   # build and copy into android/ and ios/
+pnpm --filter @skaitch/survey android    # open in Android Studio
+pnpm --filter @skaitch/survey ios        # open in Xcode (macOS)
+```
+
+See [apps/survey/README.md](apps/survey/README.md).
+
+---
+
+## skaitch Online (web edition, self-hosted)
+
+The same editor also runs in a browser, with accounts, cloud storage and a remote MCP
+endpoint. The official instance is [skaitch.online](https://skaitch.online). It needs a Firebase project and a Vercel deployment; the sections below are
+for those who want to host it themselves.
+
+### Requirements
 
 | Tool | Minimum version |
 |-------|-----------------|
@@ -35,7 +105,7 @@ The skAItch Survey mobile app offers the same 11 languages, following the phone'
 
 ---
 
-## Local installation
+### Local installation
 
 ```bash
 # 1. Clone the repository
@@ -63,7 +133,7 @@ provider, enter its full base URL, including `/v1` if needed.
 
 ---
 
-## Available scripts
+### Available scripts
 
 | Command | Description |
 |----------|-------------|
@@ -77,9 +147,9 @@ provider, enter its full base URL, including `/v1` if needed.
 
 ---
 
-## Deploying on Vercel
+### Deploying on Vercel
 
-### First setup
+#### First setup
 
 ```bash
 # Starts the Vercel CLI, signs in your account, links the project
@@ -91,7 +161,7 @@ This command:
 2. Opens the browser to sign in (`vercel login`)
 3. Links the folder to the Vercel project (`vercel link`)
 
-### Deploying an update
+#### Deploying an update
 
 ```bash
 # Production deployment
@@ -101,7 +171,7 @@ pnpm run deploy
 pnpm run deploy:preview
 ```
 
-### Environment variables on Vercel
+#### Environment variables on Vercel
 
 In **Vercel Dashboard → Project → Settings → Environment Variables**, add if needed:
 
@@ -117,7 +187,7 @@ Configure the Firebase variables of `.env.example`, then `OAUTH_SECRET` (at leas
 The Vercel project must allow the 180-second function duration configured for
 `api/mcp.ts`, to leave time to confirm a change in the editor.
 
-### Downloading the desktop app
+#### Downloading the desktop app
 
 The server offers the desktop app installers (Windows, macOS,
 Linux) from the repository's **latest GitHub release**. As the repository is private, the
@@ -141,7 +211,7 @@ Download buttons appear in **About**. Installers are
 built by the `.github/workflows/desktop-release.yml` workflow on every `v*` tag
 (see `apps/desktop/README.md`).
 
-### Technical notes
+#### Technical notes
 
 - The **COOP / COEP** headers (`Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Embedder-Policy: require-corp`) are set in `vercel.json`. They are required for `web-ifc` to use `SharedArrayBuffer` (multithreaded WASM).
 - `web-ifc` is pinned to `0.0.77`: version `0.0.78` has a JavaScript/WASM incompatibility on `StreamMeshes`. Check loading in a browser before any upgrade.
@@ -150,7 +220,7 @@ built by the `.github/workflows/desktop-release.yml` workflow on every `v*` tag
 
 ---
 
-## Codex plugin
+### Codex plugin
 
 Download the SkAItch plugin from the MCP settings on the web or in the desktop
 app. The archive contains one Agent Plugin with the `skaitch-mcp` skill and
@@ -166,9 +236,9 @@ You can also install the OAuth plugin from this repository's local catalogue.
 In a new chat, ask Codex to list the SkAItch projects, then select the project
 you want to work on.
 
-## MCP setup in ChatGPT and Claude
+### MCP setup in ChatGPT and Claude
 
-### Remote connection (ChatGPT and Claude)
+#### Remote connection (ChatGPT and Claude)
 
 1. In SkAItch, sign in, enable MCP and generate a key in
    **Settings → API / MCP keys** with the needed rights on projects.
@@ -194,7 +264,7 @@ Official documentation: [ChatGPT MCP](https://developers.openai.com/plugins/buil
 [ChatGPT OAuth authentication](https://developers.openai.com/plugins/build/auth),
 [Claude connectors](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp).
 
-### Local Claude Desktop (stdio)
+#### Local Claude Desktop (stdio)
 
 Install the dependencies, run `pnpm run dev`, open the application,
 sign in and enable MCP. Claude Desktop will start its own MCP process;
@@ -227,7 +297,7 @@ not in the application's PATH, use its absolute path for `command`.
 The TypeScript loader installed in the project works even if Claude starts
 from another folder. ChatGPT uses the remote connector above.
 
-### Reproducible check
+#### Reproducible check
 
 ```bash
 pnpm test
@@ -245,7 +315,7 @@ each application and test `list_projects`, `select_project`, a read, then
 a confirmed change. Also check that a change is refused with a
 read-only key.
 
-### Available MCP tools
+#### Available MCP tools
 
 | Tool | Description |
 |------|-------------|
