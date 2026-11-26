@@ -43,10 +43,29 @@ function github(token: string, accept = 'application/vnd.github+json') {
   return { Authorization: `Bearer ${token}`, Accept: accept, 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'skaitch-download' };
 }
 
+/** GitHub refused the release lookup; carries its HTTP status so the cause can be explained. */
+class GitHubError extends Error {
+  constructor(readonly status: number) { super(`GitHub ${status}`); }
+}
+
+/** Why the release lookup failed, worded for whoever configures the deployment. Never includes the token. */
+function lookupFailure(error: unknown, repo: string) {
+  if (!(error instanceof GitHubError)) {
+    return { reason: 'network', detail: 'GitHub n’a pas pu être contacté (réseau, ou jeton contenant un caractère invalide).' };
+  }
+  const detail: Record<number, [string, string]> = {
+    401: ['invalid_token', 'GITHUB_TOKEN est refusé par GitHub : jeton invalide, expiré ou mal copié.'],
+    403: ['forbidden', `GITHUB_TOKEN n’a pas le droit de lire ${repo} (permission « Contents : Read-only » requise) ou la limite d’appels est atteinte.`],
+    404: ['not_found', `${repo} ou sa dernière release est introuvable pour ce jeton : vérifiez que le jeton a accès à ce dépôt et que la release est publiée.`],
+  };
+  const [reason, text] = detail[error.status] ?? ['github_error', `GitHub a répondu ${error.status}.`];
+  return { reason, githubStatus: error.status, detail: text };
+}
+
 async function latestRelease(repo: string, token: string): Promise<Release> {
   if (cache && cache.repo === repo && Date.now() - cache.at < CACHE_MS) return cache.release;
   const response = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, { headers: github(token) });
-  if (!response.ok) throw new Error(`GitHub ${response.status}`);
+  if (!response.ok) throw new GitHubError(response.status);
   const body = await response.json();
   const installers = (Array.isArray(body.assets) ? body.assets : []).map(classify).filter(Boolean) as Installer[];
   const release = { tag: String(body.tag_name), name: String(body.name || body.tag_name), publishedAt: String(body.published_at), installers };
@@ -84,14 +103,15 @@ export default async function handler(req: any, res: any) {
     res.end(JSON.stringify(body));
   };
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.setHeader('Allow', 'GET, HEAD'); return send(405, { error: 'Méthode non autorisée.' }); }
-  const token = process.env.GITHUB_TOKEN;
+  // Pasted values often carry a trailing space or line break, which GitHub would reject.
+  const token = process.env.GITHUB_TOKEN?.trim();
   const repo = process.env.GITHUB_REPO || 'skaitch/skaitch';
   if (!token) return send(503, { error: 'Téléchargements non configurés.' });
 
   const params = new URL(req.url ?? '/', 'http://download.local').searchParams;
   let release: Release;
   try { release = await latestRelease(repo, token); }
-  catch { return send(502, { error: 'Release introuvable.' }); }
+  catch (error) { return send(502, { error: 'Release introuvable.', ...lookupFailure(error, repo) }); }
 
   const platformParam = params.get('platform');
   if (!platformParam) {

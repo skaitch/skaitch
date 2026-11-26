@@ -123,6 +123,35 @@ it('reports unknown platforms, missing installers and missing configuration', as
   expect(res.statusCode).toBe(503);
 });
 
+it.each([
+  [401, 'invalid_token'],
+  [403, 'forbidden'],
+  [404, 'not_found'],
+  [500, 'github_error'],
+])('explains a GitHub %i answer on the release lookup as %s', async (status, reason) => {
+  fetchMock.mockImplementation(async () => new Response('{}', { status }));
+  const res = response();
+  await handler({ method: 'GET', url: '/api/download' }, res);
+  expect(res.statusCode).toBe(502);
+  expect(res.json()).toMatchObject({ error: 'Release introuvable.', reason, githubStatus: status });
+  expect(res.json().detail).toEqual(expect.any(String));
+  expect(res.body).not.toContain('secret-token');
+});
+
+it('explains a request GitHub never received', async () => {
+  fetchMock.mockRejectedValue(new TypeError('fetch failed'));
+  const res = response();
+  await handler({ method: 'GET', url: '/api/download' }, res);
+  expect(res.statusCode).toBe(502);
+  expect(res.json()).toMatchObject({ reason: 'network' });
+});
+
+it('ignores spaces and line breaks pasted around the token', async () => {
+  vi.stubEnv('GITHUB_TOKEN', '  secret-token\n');
+  await handler({ method: 'GET', url: '/api/download' }, response());
+  expect(fetchMock).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ headers: expect.objectContaining({ Authorization: 'Bearer secret-token' }) }));
+});
+
 it('fails cleanly when GitHub does not return a signed URL', async () => {
   fetchMock.mockImplementation(async (url: string) => url.endsWith('/releases/latest')
     ? new Response(JSON.stringify(release), { status: 200 })
