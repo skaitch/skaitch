@@ -3,9 +3,9 @@ window.SKAITCH_SITE = {
   // Online editor.
   appUrl: 'https://app.skaitch.online/',
 
-  // GitHub repository. Leave `public: false` while the repository is private:
+  // GitHub repository. Set `public: false` while the repository is private:
   // the link then shows as "coming soon".
-  github: { public: false, url: 'https://github.com/skaitch/skaitch' },
+  github: { public: true, url: 'https://github.com/skaitch/skaitch' },
 
   // Desktop installers, served by the editor's /download/:platform endpoint
   // (latest GitHub release). Set `ready: true` once a release is published and the
