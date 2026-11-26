@@ -31,3 +31,7 @@ conversion_tests/
 .agentbridge/
 /test-proxy.js
 .vercel
+
+# Local secret files: Vercel variables and Firebase service account keys
+vercel.env
+*firebase-adminsdk*.json

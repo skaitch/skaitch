@@ -11,6 +11,7 @@ const release = {
     asset('skAItch-0.4.0-mac-x64.dmg', 4),
     asset('skAItch-0.4.0-linux-x86_64.AppImage', 5),
     asset('skAItch-0.4.0-linux-amd64.deb', 6),
+    asset('skAItch-Survey-0.4.0.apk', 7),
   ],
 };
 
@@ -40,6 +41,7 @@ afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 it('recognises installers and normalises their architecture', () => {
   expect(classify(asset('skAItch-0.4.0-linux-x86_64.AppImage', 5))).toMatchObject({ platform: 'linux', arch: 'x64', format: 'appimage' });
   expect(classify(asset('skAItch-0.4.0-win-x64.exe.blockmap', 2))).toBeNull();
+  expect(classify(asset('skAItch-Survey-0.4.0.apk', 7))).toMatchObject({ platform: 'android', arch: 'arm64', format: 'apk' });
 });
 
 it('lists the installers of the latest release without exposing GitHub URLs', async () => {
@@ -48,7 +50,7 @@ it('lists the installers of the latest release without exposing GitHub URLs', as
   expect(res.statusCode).toBe(200);
   const body = res.json();
   expect(body.version).toBe('v0.4.0');
-  expect(body.installers).toHaveLength(5);
+  expect(body.installers).toHaveLength(6);
   expect(body.installers[0]).toEqual({ platform: 'windows', arch: 'x64', format: 'exe', name: 'skAItch-0.4.0-win-x64.exe', size: 101, url: '/download/windows?arch=x64&format=exe' });
   expect(res.body).not.toContain('api.github.com');
   expect(fetchMock).toHaveBeenCalledWith('https://api.github.com/repos/o/r/releases/latest', expect.objectContaining({ headers: expect.objectContaining({ Authorization: 'Bearer secret-token' }) }));
@@ -60,6 +62,7 @@ it.each([
   ['macos', { arch: 'x64' }, 4],
   ['linux', {}, 5],
   ['linux', { format: 'deb' }, 6],
+  ['android', {}, 7],
 ])('redirects %s %o to the signed URL of asset %i', async (platform, extra, id) => {
   const res = response();
   const query = new URLSearchParams({ platform, ...extra });

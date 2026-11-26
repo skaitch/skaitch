@@ -41,7 +41,8 @@
     if (dlReady) a.href = `${cfg.downloads.base}/${a.dataset.dl}`;
     else soon(a);
   });
-  if (cfg.downloads.releasesUrl) {
+  const releases = cfg.downloads.releasesUrl;
+  if (releases && (cfg.github.public || !releases.startsWith('https://github.com/'))) {
     $('#dl-releases').hidden = false;
     $('#dl-releases a').href = cfg.downloads.releasesUrl;
   }

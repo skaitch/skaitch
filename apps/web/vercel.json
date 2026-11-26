@@ -6,11 +6,11 @@
   "rewrites": [
     {
       "source": "/__/auth/:path*",
-      "destination": "https://skaich-488b5.firebaseapp.com/__/auth/:path*"
+      "destination": "https://skaitch-eea3a.firebaseapp.com/__/auth/:path*"
     },
     {
       "source": "/__/firebase/:path*",
-      "destination": "https://skaich-488b5.firebaseapp.com/__/firebase/:path*"
+      "destination": "https://skaitch-eea3a.firebaseapp.com/__/firebase/:path*"
     },
     {
       "source": "/.well-known/oauth-authorization-server(/.*)?",

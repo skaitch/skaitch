@@ -1,25 +1,28 @@
 /**
- * Desktop installers, served from the latest GitHub release of a private repository.
+ * Desktop installers and the skaitch Survey APK, served from the latest GitHub release of the
+ * skaitch repository.
  *
  * GET /api/download                       → JSON list of the installers of the latest release.
- * GET /api/download?platform=windows|mac|linux[&arch=x64|arm64][&format=appimage|deb]
+ * GET /api/download?platform=windows|mac|linux|android[&arch=x64|arm64][&format=appimage|deb]
  *                                         → 302 to a short-lived signed URL of that installer.
  *
  * The server token never reaches the browser and the bytes never go through the function:
  * GitHub answers the asset request with a redirect to its own storage, which we hand back.
  */
-export type Platform = 'windows' | 'mac' | 'linux';
+export type Platform = 'windows' | 'mac' | 'linux' | 'android';
 export type Arch = 'x64' | 'arm64';
 export interface Installer { platform: Platform; arch: Arch; format: string; name: string; size: number; api: string }
 interface Release { tag: string; name: string; publishedAt: string; installers: Installer[] }
 
 const CACHE_MS = 60_000;
-const PLATFORMS: Record<string, Platform> = { windows: 'windows', win: 'windows', mac: 'mac', macos: 'mac', darwin: 'mac', linux: 'linux' };
-const DEFAULT_ARCH: Record<Platform, Arch> = { windows: 'x64', mac: 'arm64', linux: 'x64' };
+const PLATFORMS: Record<string, Platform> = { windows: 'windows', win: 'windows', mac: 'mac', macos: 'mac', darwin: 'mac', linux: 'linux', android: 'android' };
+const DEFAULT_ARCH: Record<Platform, Arch> = { windows: 'x64', mac: 'arm64', linux: 'x64', android: 'arm64' };
 const DEFAULT_FORMAT: Partial<Record<Platform, string>> = { linux: 'appimage' };
 const ARCHS: Record<string, Arch> = { x64: 'x64', x86_64: 'x64', amd64: 'x64', arm64: 'arm64', aarch64: 'arm64' };
 // Matches the artifactName of apps/desktop/scripts/package.mjs: skAItch-${version}-${os}-${arch}.${ext}
 const INSTALLER = /^skAItch-.+-(win|mac|linux)-([a-z0-9_]+)\.(exe|dmg|AppImage|deb)$/;
+// The skaitch Survey Android build: skAItch-Survey-${version}.apk (a single universal APK).
+const SURVEY_APK = /^skAItch-Survey-[^/]+\.apk$/;
 
 let cache: { at: number; repo: string; release: Release } | null = null;
 // Signed storage URLs stay valid for a few minutes. Reusing one for LOCATION_TTL_S, here and at
@@ -29,6 +32,7 @@ const locations = new Map<string, { at: number; url: string }>();
 
 /** Recognises the installers among a release's assets; other files (blockmaps, notes…) are ignored. */
 export function classify(asset: { name: string; size: number; url: string }): Installer | null {
+  if (SURVEY_APK.test(asset.name)) return { platform: 'android', arch: 'arm64', format: 'apk', name: asset.name, size: asset.size, api: asset.url };
   const match = INSTALLER.exec(asset.name);
   const arch = match && ARCHS[match[2]];
   if (!match || !arch) return null;
@@ -81,7 +85,7 @@ export default async function handler(req: any, res: any) {
   };
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.setHeader('Allow', 'GET, HEAD'); return send(405, { error: 'Méthode non autorisée.' }); }
   const token = process.env.GITHUB_TOKEN;
-  const repo = process.env.GITHUB_REPO || 'pintorus/skAItch';
+  const repo = process.env.GITHUB_REPO || 'skaitch/skaitch';
   if (!token) return send(503, { error: 'Téléchargements non configurés.' });
 
   const params = new URL(req.url ?? '/', 'http://download.local').searchParams;
@@ -103,7 +107,7 @@ export default async function handler(req: any, res: any) {
   }
 
   const platform = PLATFORMS[platformParam.toLowerCase()];
-  if (!platform) return send(400, { error: 'Plateforme inconnue (windows, mac ou linux).' });
+  if (!platform) return send(400, { error: 'Plateforme inconnue (windows, mac, linux ou android).' });
   const installer = pick(release.installers, platform, params.get('arch') ?? undefined, params.get('format') ?? undefined);
   if (!installer) return send(404, { error: `Aucun installateur ${platform} dans ${release.tag}.` });
 

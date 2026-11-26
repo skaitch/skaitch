@@ -198,7 +198,7 @@ Vercel and the token is never exposed.
 | Variable | Value |
 |----------|--------|
 | `GITHUB_TOKEN` | *Fine-grained* token limited to this repository, permission **Contents: read-only** |
-| `GITHUB_REPO` | `pintorus/skAItch` (default value) |
+| `GITHUB_REPO` | `skaitch/skaitch` (default value) |
 
 | Address | Result |
 |---------|----------|
