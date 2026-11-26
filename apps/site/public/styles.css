@@ -239,6 +239,9 @@ p { margin: 0; }
 .closing .btn.is-soon::after { color: #fff; }
 
 .foot { background: var(--navy); color: rgb(255 255 255 / 0.6); border-top: 1px solid rgb(255 255 255 / 0.18); padding: 28px 0; font-size: 14px; }
+.contact { padding: 96px 0; text-align: center; }
+.contact h2 { font-size: clamp(32px, 4.5vw, 56px); letter-spacing: -0.02em; }
+.contact p { margin: 16px auto 28px; font-size: 18px; max-width: 52ch; opacity: 0.8; }
 .foot-in { display: flex; flex-wrap: wrap; gap: 8px 28px; }
 .foot a:hover { color: #fff; }
 
