@@ -111,7 +111,11 @@ export default async function handler(req: any, res: any) {
   const params = new URL(req.url ?? '/', 'http://download.local').searchParams;
   let release: Release;
   try { release = await latestRelease(repo, token); }
-  catch (error) { return send(502, { error: 'Release introuvable.', ...lookupFailure(error, repo) }); }
+  catch (error) {
+    // Shape of the configured value, enough to spot a wrong paste without revealing it.
+    const shape = { length: token.length, prefix: (/^(github_pat_|ghp_|gho_|ghs_)/.exec(token)?.[1]) ?? 'unknown' };
+    return send(502, { error: 'Release introuvable.', ...lookupFailure(error, repo), token: shape });
+  }
 
   const platformParam = params.get('platform');
   if (!platformParam) {
