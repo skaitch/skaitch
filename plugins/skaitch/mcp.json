@@ -3,12 +3,7 @@
   "mcpServers": {
     "skaitch": {
       "type": "streamable-http",
-      "url": "https://app.skaitch.online/api/mcp",
-      "extensions": {
-        "com.openai": {
-          "auth": { "type": "oauth", "client": { "mode": "dcr" }, "baseScopes": ["mcp"] }
-        }
-      }
+      "url": "https://app.skaitch.online/api/mcp"
     }
   }
 }

@@ -7,7 +7,8 @@ import { triggerFileDownload } from './exportFormats';
 
 /**
  * Two distinct plugins so both can be installed side by side in Codex:
- * - `web`: the hosted server, authenticated with OAuth (`codex mcp login skaitch`).
+ * - `web`: the hosted server, authenticated with OAuth discovered from its 401 challenge.
+ *   Codex rejects any server field besides `url` and `headers`, so nothing else goes in mcp.json.
  * - `desktop`: the local skAItch Desktop server, authenticated by its secret URL.
  */
 export type CodexPluginTarget = 'web' | 'desktop';
@@ -16,12 +17,6 @@ const variants = {
   web: { name: 'skaitch', displayName: 'SkAItch', description: 'Connect Codex to SkAItch BIM projects.' },
   desktop: { name: 'skaitch-desktop', displayName: 'SkAItch Desktop', description: 'Connect Codex to the projects open in skAItch Desktop.' },
 } as const;
-
-// Codex only offers to sign in when the server declares OAuth; the desktop URL carries its own secret.
-function server(target: CodexPluginTarget, url: string) {
-  const { extensions: _auth, ...base } = mcp.mcpServers.skaitch;
-  return target === 'web' ? { ...mcp.mcpServers.skaitch, url } : { ...base, url };
-}
 
 export function codexPluginArchive(url: string, target: CodexPluginTarget = 'web') {
   const variant = variants[target];
@@ -34,7 +29,7 @@ export function codexPluginArchive(url: string, target: CodexPluginTarget = 'web
       extensions: { ...manifest.extensions, 'com.openai': { ...openai, interface: { ...openai.interface, displayName: variant.displayName } } },
     }, null, 2)),
     'assets/skaitch-icon.svg': strToU8(logo),
-    'mcp.json': strToU8(JSON.stringify({ ...mcp, mcpServers: { [variant.name]: server(target, url) } }, null, 2)),
+    'mcp.json': strToU8(JSON.stringify({ ...mcp, mcpServers: { [variant.name]: { ...mcp.mcpServers.skaitch, url } } }, null, 2)),
     'skills/skaitch-mcp/SKILL.md': strToU8(skill),
   });
 }
