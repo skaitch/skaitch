@@ -28,7 +28,7 @@ export default async function handler(req: any, res: any) {
     client_id_issued_at: Math.floor(Date.now() / 1000),
     client_name: name,
     redirect_uris: uris,
-    grant_types: ['authorization_code'],
+    grant_types: ['authorization_code', 'refresh_token'],
     response_types: ['code'],
     token_endpoint_auth_method: 'none',
   });

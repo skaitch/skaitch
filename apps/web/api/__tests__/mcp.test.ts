@@ -85,7 +85,14 @@ describe('OAuth installation flow (ChatGPT / Claude redirect URIs)', () => {
       const exchanged = response();
       await token(req({ grant_type: 'authorization_code', code, client_id: client, redirect_uri: redirect, code_verifier: verifier }), exchanged);
       expect(exchanged.status).toBe(200);
-      const access = JSON.parse(exchanged.body).access_token;
+      const { access_token: access, refresh_token: refresh } = JSON.parse(exchanged.body);
+      const wrongClient = response();
+      await token(req({ grant_type: 'refresh_token', refresh_token: refresh, client_id: 'other' }), wrongClient);
+      expect(wrongClient.status).toBe(400);
+      const refreshed = response();
+      await token(req({ grant_type: 'refresh_token', refresh_token: refresh, client_id: client }), refreshed);
+      expect(refreshed.status).toBe(200);
+      expect(unseal<any>('access', JSON.parse(refreshed.body).access_token).res).toBe('https://example.com/api/mcp');
       expect(unseal<any>('access', access).res).toBe('https://example.com/api/mcp');
       const tools = response();
       await handler(req({ jsonrpc: '2.0', id: 0, method: 'tools/list' }, { authorization: `Bearer ${access}` }), tools);
@@ -202,6 +209,21 @@ describe('OAuth installation flow (ChatGPT / Claude redirect URIs)', () => {
       expect(denied.status).toBe(401);
       expect(store.calls.filter(c => !c.ref.startsWith('usage_'))).toHaveLength(0);
     }
+  });
+  it('still opens tokens sealed with the previous secret during a rotation', async () => {
+    const old = seal('access', { k: 'ak_user_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', res: 'https://example.com/api/mcp' }, 60);
+    process.env.OAUTH_SECRET_PREVIOUS = process.env.OAUTH_SECRET;
+    process.env.OAUTH_SECRET = 'a-brand-new-secret-with-thirty-two-plus-chars';
+    try {
+      expect(unseal<any>('access', old)?.k).toBe('ak_user_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+      delete process.env.OAUTH_SECRET_PREVIOUS;
+      expect(unseal('access', old)).toBeNull();
+    } finally { delete process.env.OAUTH_SECRET_PREVIOUS; }
+  });
+  it('ignores API keys passed in the URL', async () => {
+    const denied = response();
+    await handler({ ...req({ jsonrpc: '2.0', id: 1, method: 'tools/list' }), query: { apiKey: 'ak_user_' + 'a'.repeat(40) } }, denied);
+    expect(denied.status).toBe(401);
   });
   it('rejects access tokens issued for another MCP resource', async () => {
     const denied = response();

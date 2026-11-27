@@ -5,12 +5,18 @@ import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { newSurvey, addRectangleRoom } from '@skaitch/core/survey/edit';
 import { readSurveyFile, writeSurveyFile } from '@skaitch/core/survey/surveyFile';
-import { startSurveyReceiver, surveyInboxOps, type SurveyReceiver } from '../surveyReceiver';
+import { isPrivateAddress, startSurveyReceiver, surveyInboxOps, type SurveyReceiver } from '../surveyReceiver';
 
 let receiver: SurveyReceiver | null = null, dir = '';
 afterEach(async () => { await receiver?.close(); receiver = null; if (dir) await rm(dir, { recursive: true, force: true }); });
 
 describe('survey receiver on the local network', () => {
+  it('accepts only clients from the local network', () => {
+    for (const ip of ['127.0.0.1', '::1', '::ffff:192.168.1.20', '10.0.0.5', '172.20.1.1', '169.254.3.4', 'fd12:3456::1', 'fe80::1'])
+      expect(isPrivateAddress(ip), ip).toBe(true);
+    for (const ip of ['8.8.8.8', '172.32.0.1', '100.64.0.1', '2001:db8::1', '::ffff:1.2.3.4', undefined])
+      expect(isPrivateAddress(ip), String(ip)).toBe(false);
+  });
   it('pairs by QR payload, receives a survey sent like the phone does, and reads it back', async () => {
     dir = await mkdtemp(join(tmpdir(), 'survey-rx-'));
     receiver = await startSurveyReceiver(dir, 39240 + Math.floor(Math.random() * 50));

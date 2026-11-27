@@ -261,8 +261,8 @@ Remote transport: stateless **Streamable HTTP**, JSON responses on POST.
 GET returns 405; no standalone SSE stream is needed. Changes
 may require confirmation in the editor (maximum delay: 120 seconds).
 Read-only keys cannot change projects. Revoking a key
-invalidates its access. Tokens expire after 30 days; then reconnect the
-connector (no refresh token is issued).
+invalidates its access. Access tokens last one hour and are renewed with a
+refresh token valid for 90 days; after that, reconnect the connector.
 
 Official documentation: [ChatGPT MCP](https://developers.openai.com/plugins/build/mcp-server),
 [ChatGPT OAuth authentication](https://developers.openai.com/plugins/build/auth),

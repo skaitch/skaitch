@@ -36,10 +36,14 @@ it('keeps Firebase, React, Electron and package self-references out of @skaitch/
   expect(imports(join(core, 'src')).filter(({ spec }) => forbiddenInCore.test(spec))).toEqual([]);
 });
 
+// The Codex plugin bundles the static files of `plugins/skaitch`, which also serves as the Claude marketplace source.
+const pluginAssets = join(root, 'plugins', 'skaitch');
+
 it('keeps Firebase and web-app code out of @skaitch/ui', () => {
   expect(dependencies(ui).filter(name => firebase.test(name))).toEqual([]);
   const offenders = imports(join(ui, 'src')).filter(({ spec, abs }) =>
-    firebase.test(spec) || spec.startsWith('@/') || spec.startsWith('@skaitch/ui') || (abs !== null && !abs.startsWith(join(ui, 'src'))));
+    firebase.test(spec) || spec.startsWith('@/') || spec.startsWith('@skaitch/ui')
+    || (abs !== null && !abs.startsWith(join(ui, 'src')) && !abs.startsWith(pluginAssets + '/')));
   expect(offenders).toEqual([]);
 });
 

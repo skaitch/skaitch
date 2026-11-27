@@ -35,3 +35,4 @@ conversion_tests/
 # Local secret files: Vercel variables and Firebase service account keys
 vercel.env
 *firebase-adminsdk*.json
+apps/web/.vitest/

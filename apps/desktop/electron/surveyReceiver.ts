@@ -73,11 +73,24 @@ export function pairingUri(port: number, key: string) {
   return `skaitch-survey:pair?${new URLSearchParams({ servers: servers.join(','), key, name: hostname() })}`;
 }
 
+/** Loopback, RFC 1918, link-local and IPv6 unique-local addresses: the phone must be on the same network. */
+export function isPrivateAddress(address: string | undefined): boolean {
+  if (!address) return false;
+  const ip = address.toLowerCase().replace(/^::ffff:/, '');
+  if (ip === '::1' || /^(fc|fd)[0-9a-f]{2}:/.test(ip) || /^fe[89ab][0-9a-f]:/.test(ip)) return true;
+  const m = /^(\d+)\.(\d+)\.\d+\.\d+$/.exec(ip);
+  if (!m) return false;
+  const [a, b] = [Number(m[1]), Number(m[2])];
+  return a === 127 || a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 169 && b === 254);
+}
+
 export interface SurveyReceiver { port: number; db: Db; close(): Promise<void> }
 
 export async function startSurveyReceiver(root: string, port = DEFAULT_SURVEY_PORT): Promise<SurveyReceiver> {
   const db = fileDb(root);
   const server: Server = createServer(async (req, res) => {
+    // Listening on every interface is needed for QR pairing; refuse anything outside the local network.
+    if (!isPrivateAddress(req.socket.remoteAddress)) { res.writeHead(403); res.end(); return; }
     const origin = req.headers.origin;
     if (origin && APP_ORIGINS.has(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);

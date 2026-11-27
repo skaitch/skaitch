@@ -45,8 +45,9 @@ export default withUsage('mcp', async function handler(req: any, res: any, usage
   };
   res.setHeader('Access-Control-Expose-Headers', 'mcp-protocol-version, WWW-Authenticate, X-Skaitch-Build, X-Skaitch-Release');
 
-  // Credentials: OAuth access token (Bearer) or legacy SKAITCH API key (x-api-key / Bearer / query).
-  let apiKey = (req.query?.apiKey || req.query?.['api-key'] || req.query?.token || req.headers['x-api-key']) as string;
+  // Credentials: OAuth access token (Bearer) or legacy SKAITCH API key (x-api-key / Bearer).
+  // Never read from the URL: query strings end up in access logs and referrers.
+  let apiKey = req.headers['x-api-key'] as string;
   if (!apiKey && req.headers.authorization) {
     const parts = req.headers.authorization.split(' ');
     if (parts[0] && parts[0].toLowerCase() === 'bearer' && parts[1]) {
