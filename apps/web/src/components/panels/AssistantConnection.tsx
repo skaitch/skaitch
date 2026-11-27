@@ -32,7 +32,7 @@ export default function AssistantConnection({ keys, enabled, lang }: { keys: Api
   return <section className="mcp-connection" aria-label={t('Connect my AI assistant')}>
     <h4>{t('Connect my AI assistant')}</h4>
     <button className="btn" type="button" onClick={() => downloadCodexPlugin(url, 'web')}>{lang === 'fr' ? 'Télécharger le plugin skaitch-web' : 'Download the skaitch-web plugin'}</button>
-    <p className="mcp-hint">{lang === 'fr' ? 'Importez le ZIP dans les paramètres de plugins de Codex. Lorsque Codex vous invite à vous connecter, identifiez-vous dans skAItch et choisissez les projets à autoriser.' : 'Import the ZIP from the Codex plugin settings. When Codex prompts you to connect, sign in to skAItch and choose which projects to authorize.'}</p>
+    <p className="mcp-hint">{lang === 'fr' ? 'Importez le ZIP dans les paramètres de plugins de Codex. La connexion OAuth à skAItch est requise pour accéder aux projets.' : 'Import the ZIP from the Codex plugin settings. OAuth sign-in to skAItch is required to access projects.'}</p>
     <div className="mcp-modes" role="group" aria-label={t('Choose an assistant')}>
       {(['claude', 'chatgpt', 'gemini'] as const).map(value => <button key={value} className="btn"
         aria-pressed={client === value} disabled={testing} onClick={() => { setClient(value); setAuth('oauth'); setStatus(''); }}>

@@ -27,23 +27,16 @@ The \`skaitch-desktop\` server connects through the private URL in Desktop setti
 export function codexPluginArchive(url: string, target: CodexPluginTarget) {
   const variant = variants[target];
   const openai = manifest.extensions['com.openai'];
-  const server = {
-    ...mcp.mcpServers['skaitch-web'],
-    url,
-    ...(target === 'web' && {
-      extensions: { 'com.openai': { auth: { type: 'oauth' } } },
-    }),
-  };
   return zipSync({
     'plugin.json': strToU8(JSON.stringify({
       ...manifest,
       name: variant.name,
-      version: target === 'web' ? '0.1.3' : manifest.version,
+      version: target === 'web' ? '0.1.4' : manifest.version,
       description: variant.description,
       extensions: { ...manifest.extensions, 'com.openai': { ...openai, interface: { ...openai.interface, displayName: variant.displayName } } },
     }, null, 2)),
     'assets/skaitch-icon.svg': strToU8(logo),
-    'mcp.json': strToU8(JSON.stringify({ ...mcp, mcpServers: { [variant.name]: server } }, null, 2)),
+    'mcp.json': strToU8(JSON.stringify({ ...mcp, mcpServers: { [variant.name]: { ...mcp.mcpServers['skaitch-web'], url } } }, null, 2)),
     [`skills/${variant.name}-mcp/SKILL.md`]: strToU8(target === 'desktop' ? desktopSkill : skill),
   });
 }

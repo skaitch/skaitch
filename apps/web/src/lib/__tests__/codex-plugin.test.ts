@@ -18,13 +18,7 @@ describe('Codex plugin download', () => {
     expect(Object.keys(files).sort()).toEqual(['assets/skaitch-icon.svg', 'mcp.json', 'plugin.json', 'skills/skaitch-web-mcp/SKILL.md']);
     expect(mcp).toEqual({
       $schema: 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json',
-      mcpServers: {
-        'skaitch-web': {
-          type: 'streamable-http',
-          url,
-          extensions: { 'com.openai': { auth: { type: 'oauth' } } },
-        },
-      },
+      mcpServers: { 'skaitch-web': { type: 'streamable-http', url } },
     });
     const webSkill = strFromU8(files['skills/skaitch-web-mcp/SKILL.md']);
     expect(webSkill).toContain('name: skaitch-web-mcp');
@@ -32,7 +26,7 @@ describe('Codex plugin download', () => {
     expect(manifest).toMatchObject({
       $schema: 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json',
       name: 'skaitch-web',
-      version: '0.1.3',
+      version: '0.1.4',
     });
     const { logo, composerIcon, displayName } = manifest.extensions['com.openai'].interface;
     expect(displayName).toBe('SkAItch Web');
