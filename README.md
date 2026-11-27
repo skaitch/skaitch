@@ -226,9 +226,8 @@ You can install both plugins side by side. Each ZIP contains its own MCP
 configuration and a skill for that connection.
 
 - **`skaitch-web`** (web, from the MCP settings on the web): import the ZIP from the
-  Codex plugin settings. Installing does not sign you in, so run
-  `codex mcp login skaitch-web` to open the OAuth window and select the projects
-  you want to authorize.
+  Codex plugin settings. The ZIP declares OAuth for the Web MCP server. When
+  prompted to connect, sign in and select the projects you want to authorize.
 - **`skaitch-desktop`** (from **Settings → MCP server** in the desktop app):
   extract the ZIP and [install it from a local Codex marketplace](https://developers.openai.com/plugins/build/plugins#install-a-local-plugin-manually).
   No sign-in is needed, but keep skAItch Desktop open on the same machine. The
