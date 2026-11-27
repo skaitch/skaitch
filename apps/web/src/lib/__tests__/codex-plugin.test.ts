@@ -18,7 +18,7 @@ describe('Codex plugin download', () => {
     expect(Object.keys(files).sort()).toEqual(['assets/skaitch-icon.svg', 'mcp.json', 'plugin.json', 'skills/skaitch-mcp/SKILL.md']);
     expect(mcp).toEqual({
       $schema: 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json',
-      mcpServers: { skaitch: { type: 'streamable-http', url } },
+      mcpServers: { skaitch: { type: 'streamable-http', url, extensions: { 'com.openai': { auth: { type: 'oauth', client: { mode: 'dcr' }, baseScopes: ['mcp'] } } } } },
     });
     expect(strFromU8(files['skills/skaitch-mcp/SKILL.md'])).toContain('name: skaitch-mcp');
     expect(manifest).toMatchObject({

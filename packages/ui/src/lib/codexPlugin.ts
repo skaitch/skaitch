@@ -17,6 +17,12 @@ const variants = {
   desktop: { name: 'skaitch-desktop', displayName: 'SkAItch Desktop', description: 'Connect Codex to the projects open in skAItch Desktop.' },
 } as const;
 
+// Codex only offers to sign in when the server declares OAuth; the desktop URL carries its own secret.
+function server(target: CodexPluginTarget, url: string) {
+  const { extensions: _auth, ...base } = mcp.mcpServers.skaitch;
+  return target === 'web' ? { ...mcp.mcpServers.skaitch, url } : { ...base, url };
+}
+
 export function codexPluginArchive(url: string, target: CodexPluginTarget = 'web') {
   const variant = variants[target];
   const openai = manifest.extensions['com.openai'];
@@ -28,7 +34,7 @@ export function codexPluginArchive(url: string, target: CodexPluginTarget = 'web
       extensions: { ...manifest.extensions, 'com.openai': { ...openai, interface: { ...openai.interface, displayName: variant.displayName } } },
     }, null, 2)),
     'assets/skaitch-icon.svg': strToU8(logo),
-    'mcp.json': strToU8(JSON.stringify({ ...mcp, mcpServers: { [variant.name]: { ...mcp.mcpServers.skaitch, url } } }, null, 2)),
+    'mcp.json': strToU8(JSON.stringify({ ...mcp, mcpServers: { [variant.name]: server(target, url) } }, null, 2)),
     'skills/skaitch-mcp/SKILL.md': strToU8(skill),
   });
 }
