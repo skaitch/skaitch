@@ -67,8 +67,8 @@ shown in **Settings → MCP server**:
 http://127.0.0.1:3923/mcp/<token>
 ```
 
-Keep this address private: it gives access to your projects. The
-[`skaitch-mcp` skill](plugins/skaitch) teaches the assistant how to use the tools.
+Keep this address private: it gives access to your projects. The downloaded
+`skaitch-desktop` plugin includes instructions for using the local MCP tools.
 
 ---
 
@@ -222,12 +222,12 @@ built by the `.github/workflows/desktop-release.yml` workflow on every `v*` tag
 
 ### Codex plugin
 
-There are two plugins. Each contains the `skaitch-mcp` skill and its MCP
-configuration, and they have different names so you can install both:
+You can install both plugins side by side. Each ZIP contains its own MCP
+configuration and a skill for that connection.
 
-- **`skaitch`** (web, from the MCP settings on the web): import the ZIP from the
+- **`skaitch-web`** (web, from the MCP settings on the web): import the ZIP from the
   Codex plugin settings. Installing does not sign you in, so run
-  `codex mcp login skaitch` to open the OAuth window and select the projects
+  `codex mcp login skaitch-web` to open the OAuth window and select the projects
   you want to authorize.
 - **`skaitch-desktop`** (from **Settings → MCP server** in the desktop app):
   extract the ZIP and [install it from a local Codex marketplace](https://developers.openai.com/plugins/build/plugins#install-a-local-plugin-manually).
@@ -235,8 +235,8 @@ configuration, and they have different names so you can install both:
   archive contains its secret MCP URL, so keep it private.
 
 You can also install the web plugin from this repository's local catalogue
-(`codex plugin marketplace add .` then `codex plugin add skaitch@skaitch-local`),
-then run `codex mcp login skaitch`.
+(`codex plugin marketplace add .` then `codex plugin add skaitch-web@skaitch-local`),
+then run `codex mcp login skaitch-web`.
 In a new chat, ask Codex to list the SkAItch projects, then select the project
 you want to work on.
 

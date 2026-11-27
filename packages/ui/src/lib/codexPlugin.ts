@@ -1,24 +1,30 @@
 import { strToU8, zipSync } from 'fflate';
-import logo from '../../../../plugins/skaitch/assets/skaitch-icon.svg?raw';
-import skill from '../../../../plugins/skaitch/skills/skaitch-mcp/SKILL.md?raw';
-import mcp from '../../../../plugins/skaitch/mcp.json';
-import manifest from '../../../../plugins/skaitch/plugin.json';
+import logo from '../../../../plugins/skaitch-web/assets/skaitch-icon.svg?raw';
+import skill from '../../../../plugins/skaitch-web/skills/skaitch-web-mcp/SKILL.md?raw';
+import mcp from '../../../../plugins/skaitch-web/mcp.json';
+import manifest from '../../../../plugins/skaitch-web/plugin.json';
 import { triggerFileDownload } from './exportFormats';
 
-/**
- * Two distinct plugins so both can be installed side by side in Codex:
- * - `web`: the hosted server, authenticated with OAuth discovered from its 401 challenge.
- *   Codex rejects any server field besides `url` and `headers`, so nothing else goes in mcp.json.
- * - `desktop`: the local skAItch Desktop server, authenticated by its secret URL.
- */
 export type CodexPluginTarget = 'web' | 'desktop';
 
 const variants = {
-  web: { name: 'skaitch', displayName: 'SkAItch', description: 'Connect Codex to SkAItch BIM projects.' },
-  desktop: { name: 'skaitch-desktop', displayName: 'SkAItch Desktop', description: 'Connect Codex to the projects open in skAItch Desktop.' },
+  web: { name: manifest.name, displayName: manifest.extensions['com.openai'].interface.displayName, description: manifest.description },
+  desktop: { name: 'skaitch-desktop', displayName: 'SkAItch Desktop', description: 'Connect Codex to local skAItch Desktop BIM projects.' },
 } as const;
 
-export function codexPluginArchive(url: string, target: CodexPluginTarget = 'web') {
+const desktopSkill = skill
+  .replace('name: skaitch-web-mcp', 'name: skaitch-desktop-mcp')
+  .replace(/## 0\. Context.*?(?=## Pick the mode)/s, `## 0. Context — always first
+
+The \`skaitch-desktop\` server connects through the private URL in Desktop settings. Keep skAItch Desktop open.
+
+1. Run \`list_projects\` to see the local library, then \`select_project\` to open the project in the editor.
+2. Run \`execute_script\` with \`return callTool("list_spatial_structure");\`, then \`select_storey\`.
+3. Watch for Accept or Refuse prompts in the desktop editor when change confirmation is enabled.
+
+`);
+
+export function codexPluginArchive(url: string, target: CodexPluginTarget) {
   const variant = variants[target];
   const openai = manifest.extensions['com.openai'];
   return zipSync({
@@ -29,12 +35,12 @@ export function codexPluginArchive(url: string, target: CodexPluginTarget = 'web
       extensions: { ...manifest.extensions, 'com.openai': { ...openai, interface: { ...openai.interface, displayName: variant.displayName } } },
     }, null, 2)),
     'assets/skaitch-icon.svg': strToU8(logo),
-    'mcp.json': strToU8(JSON.stringify({ ...mcp, mcpServers: { [variant.name]: { ...mcp.mcpServers.skaitch, url } } }, null, 2)),
-    'skills/skaitch-mcp/SKILL.md': strToU8(skill),
+    'mcp.json': strToU8(JSON.stringify({ ...mcp, mcpServers: { [variant.name]: { ...mcp.mcpServers['skaitch-web'], url } } }, null, 2)),
+    [`skills/${variant.name}-mcp/SKILL.md`]: strToU8(target === 'desktop' ? desktopSkill : skill),
   });
 }
 
-export function downloadCodexPlugin(url: string, target: CodexPluginTarget = 'web') {
+export function downloadCodexPlugin(url: string, target: CodexPluginTarget) {
   const archive = codexPluginArchive(url, target);
   triggerFileDownload(new Blob([new Uint8Array(archive)], { type: 'application/zip' }), `${variants[target].name}-agent-plugin.zip`, 'application/zip');
 }

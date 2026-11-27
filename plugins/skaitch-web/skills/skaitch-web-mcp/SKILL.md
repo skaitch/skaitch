@@ -1,20 +1,24 @@
 ---
-name: skaitch-mcp
+name: skaitch-web-mcp
 description: Drive a skAItch BIM/IFC project through its MCP server (tools named *skaitch*__list_projects, get_storey_floorplan, create_wall, create_door, create_furniture, create_sheet, export_ifc…). Use whenever the user wants to inspect, model, digitise a floor plan, furnish, annotate, lay out sheets or export a skAItch project — for example, "model this floor plan", "add doors", "create an A3 sheet", or "export the IFC" — even if they don't say "MCP".
 ---
 
 # skAItch MCP
 
-The skAItch MCP server (local `skaitch-desktop`, or cloud `skaitch` via OAuth) exposes the BIM editor as tools. Tool names below omit the `mcp__<server>__` prefix.
+Tool names below omit the MCP server prefix.
 
 Use the compact MCP interface when available. Load `edit_model` before modelling and `analyze_model` for substantial queries. Discover only the required argument schemas with `search_tools`. Tool names below refer to BIM operations you can invoke through `call_tool` with JSON-encoded arguments.
 
 ## 0. Context — always first
 
+The `skaitch-web` server uses OAuth and lists the projects authorized for this connection.
+
 1. `list_projects` → `select_project` → `execute_script` with `return callTool("list_spatial_structure");` → `select_storey`.
 2. Never assume the project shown in the browser is the MCP context: selection belongs to the connection/API key.
 3. Cloud reads see the **saved** model — ask the user to save before reading their recent edits.
 4. Mutations need **browser confirmation** by default; tell the user to watch for approval prompts. `get_view`/`set_view`/`capture_view` need an open editor tab.
+
+5. `generate_visualization` uses the account’s saved AI preferences and needs browser approval.
 
 ## Pick the mode
 
@@ -57,7 +61,6 @@ Use the compact MCP interface when available. Load `edit_model` before modelling
 - `create_dimension` from actual drawing locations; `create_marker` for reference points you'll reuse.
 - `create_section` (plan line `x1,y1,x2,y2`) → `create_sheet` (A3 landscape default) → `add_sheet_view` (plan: storey id; section: section id; position in mm from top-left) → `update_sheet_view` → `export_sheet` to check.
 - `export_ifc` returns IFC4 STEP text: write it to a file the user named (default `export.ifc`), don't dump it in chat.
-- `generate_visualization` (cloud) uses the account's saved AI preferences and needs browser approval.
 
 ### F. Visual check
 `set_view {mode:"2d"|"3d", storey_id, fit}` → `capture_view` → look at the image. Use it after each batch of creations, not only at the end.
@@ -69,7 +72,7 @@ Use the compact MCP interface when available. Load `edit_model` before modelling
 4. Before finishing, reconcile the inventory: every entry → created ID, or an explicit unresolved reason. Report all wall heights and any justified exception.
 
 ## Final report
-Short list: what was created/changed (counts + IDs per type), assumptions (wall height, thickness, types), unresolved items, and a `capture_view` image when a browser is open.
+Short list: what was created/changed (counts + IDs per type), assumptions (wall height, thickness, types), unresolved items, and a `capture_view` image when the editor is open.
 
 ## Guardrails
 - Never delete storeys (`delete_storey recursive:true`) or bulk-delete without the user's explicit yes.

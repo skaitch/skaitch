@@ -83,7 +83,7 @@ export default function DesktopSettings(props: SettingsSlotProps) {
           <p className="desktop-settings-note">{fr ? 'Décompressez le ZIP et installez le plugin « SkAItch Desktop » depuis un catalogue local Codex. Aucune connexion n’est nécessaire, mais gardez skAItch Desktop ouvert. Le ZIP contient votre URL secrète.' : 'Extract the ZIP and install the "SkAItch Desktop" plugin from a local Codex marketplace. No sign-in is needed, but keep skAItch Desktop open. The ZIP contains your secret URL.'}</p>
         </div>
         <button className="btn" type="button" disabled={!url} onClick={() => downloadCodexPlugin(url, 'desktop')}>
-          Download agent plugin
+          {fr ? 'Télécharger le plugin skaitch-desktop' : 'Download the skaitch-desktop plugin'}
         </button>
       </div>
       <details>

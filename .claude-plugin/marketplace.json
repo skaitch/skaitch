@@ -3,8 +3,8 @@
   "interface": { "displayName": "SkAItch" },
   "plugins": [
     {
-      "name": "skaitch",
-      "source": { "source": "local", "path": "./plugins/skaitch" },
+      "name": "skaitch-web",
+      "source": { "source": "local", "path": "./plugins/skaitch-web" },
       "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
       "category": "Productivity"
     }

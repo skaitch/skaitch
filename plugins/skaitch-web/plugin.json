@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "skaitch",
+  "name": "skaitch-web",
   "version": "0.1.2",
-  "description": "Connect Codex to SkAItch BIM projects.",
+  "description": "Connect Codex to SkAItch Web BIM projects via OAuth.",
   "author": {
     "name": "skAItch",
     "email": "skaitch@proton.me",
@@ -13,7 +13,7 @@
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "SkAItch",
+        "displayName": "SkAItch Web",
         "shortDescription": "Inspect and edit BIM IFC models.",
         "logo": "./assets/skaitch-icon.svg",
         "composerIcon": "./assets/skaitch-icon.svg",
