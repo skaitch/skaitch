@@ -4,7 +4,7 @@ import { Share } from '@capacitor/share';
 import { loadPhoto } from './storage';
 import { SURVEY_EXTENSION, SURVEY_MIME, writeSurveyFile, type Survey } from '@skaitch/core/survey/surveyFile';
 
-export const APP_VERSION = '0.9.0';
+export const APP_VERSION = '0.10.0';
 
 function bytesToBase64(bytes: Uint8Array) {
   let binary = '';
