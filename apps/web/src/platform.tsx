@@ -39,7 +39,7 @@ function useWebAssistant(context: AssistantContext) {
   return useMcpBridge({
     ...context,
     uid: accountId,
-    alwaysValidate: ai.mcpAlwaysValidate ?? true,
+    alwaysValidate: ai.mcpAlwaysValidate ?? false,
     setAlwaysValidate: value => setAi(previous => ({ ...previous, mcpAlwaysValidate: value })),
   }, ai.mcpEnabled && mcpSettingsReady);
 }

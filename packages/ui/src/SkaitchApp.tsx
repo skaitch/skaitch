@@ -232,7 +232,7 @@ export default function SkaitchApp({ platform }: { platform: SkaitchPlatform }) 
     temperature: 0, 
     baseUrl: '',
     mcpEnabled: true,
-    mcpAlwaysValidate: true,
+    mcpAlwaysValidate: false,
     ...(uiState.ai || {})
   }));
 

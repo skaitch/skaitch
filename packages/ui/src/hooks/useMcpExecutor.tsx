@@ -129,6 +129,10 @@ export function useMcpExecutor(handlers: McpExecutorHandlers) {
       const current = () => sameContext() && hRef.current.items === items && hRef.current.focusStorey === focusStorey;
       if (!current() || Date.now() >= expiresAt) throw new Error('Le projet a changé ou le lot a expiré.');
       if (prepared && !snapshot.replaceItems) throw new Error('Application du lot indisponible dans cet éditeur.');
+      if (prepared && !forceConfirm && !alwaysValidate) {
+        snapshot.replaceItems!(prepared.items);
+        return prepared.result;
+      }
       return new Promise((resolve, reject) => {
         const id = String(Date.now() + Math.random());
         setPendingQueue(queue => [...queue, {
@@ -143,7 +147,7 @@ export function useMcpExecutor(handlers: McpExecutorHandlers) {
       });
     }
 
-    const needsConfirm = (forceConfirm || (alwaysValidate ?? true)) &&
+    const needsConfirm = (forceConfirm || alwaysValidate) &&
       !bypassRef.current &&
       ['create_ifc_element', 'update_ifc_element', 'delete_ifc_element', 'generate_visualization', 'create_storey', 'update_storey', 'delete_storey', 'create_section', 'create_roof', 'create_stair', 'create_slab', 'create_wall', 'connect_walls', 'create_space', 'create_door', 'create_window', 'create_dimension', 'delete_element', 'update_wall', 'create_marker', 'create_technical', 'update_technical', 'create_column', 'update_column', 'create_chimney', 'update_chimney', 'update_opening', 'create_furniture', 'update_furniture', 'update_element', 'create_sheet', 'add_sheet_view', 'update_sheet_view'].includes(name);
 

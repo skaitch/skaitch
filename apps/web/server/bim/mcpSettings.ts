@@ -6,7 +6,7 @@ export async function mcpSettings(uid: string, data: Record<string, unknown>) {
   const ref = getAdminDb().doc(`users/${uid}/metadata/mcp`);
   if (data.action === 'get') {
     const snapshot = await ref.get();
-    return { enabled: true, alwaysValidate: true, revision: 0, ...snapshot.data() };
+    return { enabled: true, alwaysValidate: false, revision: 0, ...snapshot.data() };
   }
   if (data.action !== 'set' || typeof data.enabled !== 'boolean' || typeof data.alwaysValidate !== 'boolean' || !Number.isSafeInteger(data.expectedRevision)
     || data.lang !== undefined && !LANGUAGES.some(({ code }) => code === data.lang)) throw new InputError('Réglages MCP invalides.');

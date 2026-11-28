@@ -32,7 +32,7 @@ export function useCloudMcpSettings(uid: string | null, ai: AiConfig,
   }, [uid, setAi]);
   useEffect(() => {
     if (!uid || readyUid !== uid) return;
-    const enabled = ai.mcpEnabled ?? true, alwaysValidate = ai.mcpAlwaysValidate ?? true;
+    const enabled = ai.mcpEnabled ?? true, alwaysValidate = ai.mcpAlwaysValidate ?? false;
     const target = JSON.stringify([enabled, alwaysValidate, lang]);
     if (requested.current === target) return;
     requested.current = target;

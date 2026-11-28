@@ -16,9 +16,9 @@ The `skaitch-web` server uses OAuth and lists the projects authorized for this c
 1. `list_projects` → `select_project` → `execute_script` with `return callTool("list_spatial_structure");` → `select_storey`.
 2. Never assume the project shown in the browser is the MCP context: selection belongs to the connection/API key.
 3. Cloud reads see the **saved** model — ask the user to save before reading their recent edits.
-4. Mutations need **browser confirmation** by default; tell the user to watch for approval prompts. `get_view`/`set_view`/`capture_view` need an open editor tab.
+4. Mutations apply directly on the saved model by default. If the user turned on « always validate » in settings, they need an open editor tab to approve. `get_view`/`set_view`/`capture_view` need an open editor tab.
 
-5. `generate_visualization` uses the account’s saved AI preferences and needs browser approval.
+5. `generate_visualization` uses the account’s saved AI preferences.
 
 ## Pick the mode
 
@@ -42,7 +42,7 @@ The `skaitch-web` server uses OAuth and lists the projects authorized for this c
 2. Read existing walls/spaces/markers (`list_ifc_entities`, `get_element_properties`). Markers are already world metres.
 3. **Write the inventory before creating anything** (in your reply or a scratch file): walls (endpoints, thickness, interior side), rooms, every opening (jambs, width, host wall, hinge, leaf tip, type), every requested fixture, dimension lines if requested. Mark uncertain items with a reason.
 4. Fix one **wall height per storey** (user → section → existing walls → else 2.80 m, stated as assumption). Pass it explicitly to every `create_wall`.
-5. Use `apply_model_batch` for related creations in the selected storey. Order operations by dependency: slab → walls → wall connections → spaces → hosted openings → fixtures and dimensions → roof. Give an operation an alias and reference its ID later with `{"$ref":"alias.id"}`. Confirm the batch in the editor, then inspect the applied geometry.
+5. Use `apply_model_batch` for related creations in the selected storey. Order operations by dependency: slab → walls → wall connections → spaces → hosted openings → fixtures and dimensions → roof. Give an operation an alias and reference its ID later with `{"$ref":"alias.id"}`. Then inspect the applied geometry.
 6. Coordinates: either world metres, or `coordinates_in_pixels:true` + `pixel_space:"image"` for pixels measured on the attached image. Convert once, never twice.
 7. Doors: prefer `hinge_point` + `opening_towards` (world points or marker IDs); `position` is the **centre fraction**, not metres. Windows: pick the operation type from the symbol + catalogue `catalogue_id`, measure the sill.
 

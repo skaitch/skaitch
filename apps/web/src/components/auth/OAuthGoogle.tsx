@@ -55,9 +55,9 @@ export default function OAuthGoogle() {
         <input key={name} type="hidden" name={name} value={params.get(name) || ''} />)}
       <input type="hidden" name="google_id_token" defaultValue="" />
       <label htmlFor="oauth-access">Accès à tous les projets de ce compte, présents et futurs</label>{' '}
-      <select id="oauth-access" name="access" style={{ display: 'block', width: '100%', marginTop: 8, padding: '11px 14px', border: '1.5px solid var(--border)', borderRadius: 8, background: 'var(--bg)', color: 'var(--ink)' }}>
-        <option value="read">Lecture seule</option>
+      <select id="oauth-access" name="access" defaultValue="write" style={{ display: 'block', width: '100%', marginTop: 8, padding: '11px 14px', border: '1.5px solid var(--border)', borderRadius: 8, background: 'var(--bg)', color: 'var(--ink)' }}>
         <option value="write">Lecture et modification</option>
+        <option value="read">Lecture seule</option>
       </select>
       <p>L’autorisation sera révocable dans vos clés API sous « Connexion OAuth ».</p>
       {error && <p role="alert" style={{ color: '#a52222' }}>{error}</p>}

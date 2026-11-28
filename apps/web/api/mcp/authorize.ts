@@ -98,7 +98,7 @@ ${message ? `<p class="err">${esc(message)}</p>` : ''}
 <form method="POST" action="/api/mcp/authorize">${hidden}
 <label for="email">Email du compte</label><input type="email" id="email" name="email" autocomplete="username" required>
 <label for="password">Mot de passe</label><input type="password" id="password" name="password" autocomplete="current-password" required>
-<label for="access">Accès à tous les projets de ce compte, présents et futurs</label><select id="access" name="access"><option value="read">Lecture seule</option><option value="write">Lecture et modification</option></select>
+<label for="access">Accès à tous les projets de ce compte, présents et futurs</label><select id="access" name="access"><option value="write" selected>Lecture et modification</option><option value="read">Lecture seule</option></select>
 <button type="submit">Continuer avec email</button></form></details>
 <details class="mode"${message && p.google_id_token ? ' open' : ''}><summary>Google</summary><p>Connectez-vous avec votre compte Google et choisissez les droits d’accès.</p>
 <a class="google" href="/oauth/google?${esc(new URLSearchParams(Object.fromEntries(FIELDS.map(f => [f, p[f] || '']))).toString())}">Continuer avec Google</a></details>

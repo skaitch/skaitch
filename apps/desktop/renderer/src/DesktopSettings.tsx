@@ -74,7 +74,7 @@ export default function DesktopSettings(props: SettingsSlotProps) {
       <Toggle checked={enabled} onChange={value => setAi(previous => ({ ...previous, mcpEnabled: value }))}
         label={fr ? 'Autoriser les clients MCP' : 'Allow MCP clients'}
         hint={fr ? 'Décoché, le serveur refuse tous les appels.' : 'When off, the server refuses every call.'} />
-      <Toggle checked={ai.mcpAlwaysValidate ?? true} onChange={value => setAi(previous => ({ ...previous, mcpAlwaysValidate: value }))}
+      <Toggle checked={ai.mcpAlwaysValidate ?? false} onChange={value => setAi(previous => ({ ...previous, mcpAlwaysValidate: value }))}
         label={fr ? 'Confirmer chaque modification' : 'Confirm every change'}
         hint={fr ? 'Recommandé. Décoché, les modifications s’appliquent sans demander.' : 'Recommended. When off, changes apply without asking.'} />
       <div className="desktop-settings-plugin">

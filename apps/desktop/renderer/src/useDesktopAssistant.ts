@@ -17,7 +17,7 @@ export function useDesktopAssistant(context: AssistantContext): AssistantApi {
   const handlers: McpExecutorHandlers = {
     ...context,
     uid: context.accountId,
-    alwaysValidate: ai.mcpAlwaysValidate ?? true,
+    alwaysValidate: ai.mcpAlwaysValidate ?? false,
     setAlwaysValidate: value => setAi(previous => ({ ...previous, mcpAlwaysValidate: value })),
     requestBim: (operation, data) => window.skaitchDesktop.bim(operation, data),
     listProjects: () => window.skaitchDesktop.library.list(),

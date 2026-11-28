@@ -174,14 +174,14 @@ it('lists only granted projects and keeps context independent for each API key',
   await expect(executeCloudTool('u', token, 'select_project', { project_id: 'b' })).rejects.toThrow('Access denied');
   await expect(executeCloudTool('u', token, 'select_project', { project_id: '../b' })).rejects.toThrow('Select a project');
 });
-it('requires confirmation by default and commits opted-in MCP changes without a browser', async () => {
+it('commits MCP changes without a browser by default and requires confirmation when opted in', async () => {
   const created = await setupCloud();
   const args = { start_point: [0, 0], end_point: [4, 0] };
-  expect(await executeCloudTool('u', token, 'create_wall', args)).toMatchObject({ handled: false, projectId: 'a', forceConfirm: true });
-  expect(memory.docs.get('users/u/projects/a').modelRevision).toBe(created.modelRevision);
-  await mcpSettings('u', { action: 'set', enabled: true, alwaysValidate: false, expectedRevision: 0 });
   const result: any = await executeCloudTool('u', token, 'create_wall', args);
   expect(result).toMatchObject({ handled: true, result: { success: true, model_revision: created.modelRevision! + 1 } });
+  await mcpSettings('u', { action: 'set', enabled: true, alwaysValidate: true, expectedRevision: 0 });
+  expect(await executeCloudTool('u', token, 'create_wall', args)).toMatchObject({ handled: false, projectId: 'a', forceConfirm: true });
+  expect(memory.docs.get('users/u/projects/a').modelRevision).toBe(created.modelRevision! + 1);
   const stored = JSON.parse(memory.docs.get('users/u/projects/a').itemsJson);
   expect(stored[result.result.id].geom.x2).toBe(4);
   const exported: any = await executeCloudTool('u', token, 'export_ifc', {});
@@ -214,7 +214,7 @@ it('preserves cascade deletion semantics when MCP deletes a wall on the server',
 });
 it('persists MCP policy with revision checks, honors disabled mode and rejects revoked keys', async () => {
   await setupCloud();
-  expect(await mcpSettings('u', { action: 'get' })).toMatchObject({ enabled: true, alwaysValidate: true });
+  expect(await mcpSettings('u', { action: 'get' })).toMatchObject({ enabled: true, alwaysValidate: false });
   await mcpSettings('u', { action: 'set', enabled: false, alwaysValidate: true, expectedRevision: 0 });
   await expect(mcpSettings('u', { action: 'set', enabled: true, alwaysValidate: false, expectedRevision: 0 })).rejects.toMatchObject({ status: 409 });
   await expect(executeCloudTool('u', token, 'list_projects', {})).rejects.toThrow('disabled');
@@ -297,8 +297,9 @@ it('renders from saved AI preferences and encrypted credentials without a browse
   expect(origins).toEqual(['https://api.openai.com']);
   expect(JSON.stringify(result)).not.toContain('hidden-render-key');
 });
-it('requires approval before making a paid render call and rechecks configuration afterwards', async () => {
+it('requires approval, when validation is enabled, before making a paid render call and rechecks configuration afterwards', async () => {
   const { config } = await setupRender();
+  await mcpSettings('u', { action: 'set', enabled: true, alwaysValidate: true, expectedRevision: 0 });
   const args = { prompt: 'House' };
   const plan: any = await executeCloudTool('u', token, 'generate_visualization', args);
   expect(plan).toMatchObject({ handled: false, approvalOnly: true, forceConfirm: true, aiPreferences: config });

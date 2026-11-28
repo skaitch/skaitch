@@ -20,7 +20,7 @@ The \`skaitch-desktop\` server connects through the private URL in Desktop setti
 
 1. Run \`list_projects\` to see the local library, then \`select_project\` to open the project in the editor.
 2. Run \`execute_script\` with \`return callTool("list_spatial_structure");\`, then \`select_storey\`.
-3. Watch for Accept or Refuse prompts in the desktop editor when change confirmation is enabled.
+3. Changes apply directly; Accept or Refuse prompts appear only if change confirmation is enabled in settings.
 
 `);
 

@@ -97,7 +97,7 @@ export async function executeCloudTool(uid: string, apiKey: string, name: string
       throw new InputError('Le projet ou la sélection a changé depuis l’aperçu. Relancez le lot.', 409);
     }
     const batch = computeMcpBatch(args, items, storeyId, catalogue, state.settings.lang);
-    if (!approval) return {
+    if (!approval && state.settings.alwaysValidate === true) return {
       handled: false, projectId, storeyId, forceConfirm: true, approvalOnly: true, confirmationContext: context,
       batchSummary: { added: batch.result.added, updated: batch.result.updated },
     };
@@ -118,7 +118,7 @@ export async function executeCloudTool(uid: string, apiKey: string, name: string
     const config = saved.config;
     const renderBase = config.visualizerBaseUrl || (config.visualizerProvider === config.provider ? config.baseUrl : undefined);
     if (config.visualizerProvider === 'custom' && localAiEndpoint('custom', renderBase || 'http://localhost:11434')) {
-      return { handled: false, projectId, storeyId, forceConfirm: state.settings.alwaysValidate !== false, aiPreferences: config };
+      return { handled: false, projectId, storeyId, forceConfirm: state.settings.alwaysValidate === true, aiPreferences: config };
     }
     const credentials = await aiCredentials(uid, { action: 'list' }) as import('@skaitch/core/lib/aiCredentialTarget').AiCredentialMeta[];
     const chatKey = findCredential(credentials, 'chat', config.provider, config.baseUrl);
@@ -129,7 +129,7 @@ export async function executeCloudTool(uid: string, apiKey: string, name: string
       preferencesRevision: saved.revision, modelRevision: stored.modelRevision ?? 0, credentialId: selectedKey?.id ?? '', credentialVersion: selectedKey?.version ?? 0 };
     if (approval && JSON.stringify(approval) !== JSON.stringify(context)) throw new InputError('Le projet, les réglages ou la clé du rendu ont changé. Relancez la demande.', 409);
     const resolved = await resolveAiCredentials(uid, { ...config, apiKey: '', apiKeyRef: chatKey?.id, visualizerKeyRef: renderKey?.id }, 'render');
-    if (state.settings.alwaysValidate !== false && !approval) return { handled: false, projectId, storeyId, forceConfirm: true, approvalOnly: true, aiPreferences: config, confirmationContext: context };
+    if (state.settings.alwaysValidate === true && !approval) return { handled: false, projectId, storeyId, forceConfirm: true, approvalOnly: true, aiPreferences: config, confirmationContext: context };
     await db.runTransaction(async tx => {
       await checkCurrent(tx);
       const [latestProject, latestPreferences] = await Promise.all([tx.get(projectRef), tx.get(db.doc(`users/${uid}/metadata/ai`))]);
@@ -144,7 +144,7 @@ export async function executeCloudTool(uid: string, apiKey: string, name: string
     signal?.throwIfAborted();
     return { handled: true, result: await renderAi(args, items, resolved, signal) };
   }
-  if (!MCP_MODEL_TOOLS.includes(name) || state.settings.alwaysValidate !== false) {
+  if (!MCP_MODEL_TOOLS.includes(name) || state.settings.alwaysValidate === true) {
     return { handled: false, projectId, storeyId, forceConfirm: MCP_MODEL_TOOLS.includes(name) };
   }
   if (args.storey_id !== undefined && items[String(args.storey_id)]?.type !== 'Storey') throw new InputError('Storey not found');
@@ -164,7 +164,7 @@ export async function executeCloudTool(uid: string, apiKey: string, name: string
     thumbnailSvg: generateThumbnailSvg(next), updatedAt: new Date().toISOString(),
   }, stored.modelRevision ?? 0, async tx => {
     const current = await checkCurrent(tx);
-    if (current.settings.alwaysValidate !== false || (current.settings.revision ?? 0) !== (state.settings.revision ?? 0)) throw new InputError('MCP confirmation settings changed. Retry the command.', 409);
+    if (current.settings.alwaysValidate === true || (current.settings.revision ?? 0) !== (state.settings.revision ?? 0)) throw new InputError('MCP confirmation settings changed. Retry the command.', 409);
   });
   return { handled: true, result: { ...(computed.result as object), model_revision: saved.modelRevision } };
 }
