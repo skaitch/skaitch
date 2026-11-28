@@ -68,6 +68,32 @@ const esc = (s: string) =>
 
 const FIELDS = ['client_id', 'redirect_uri', 'response_type', 'state', 'code_challenge', 'code_challenge_method', 'scope', 'resource', 'consent'];
 
+const GOOGLE_ICON = '<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-2.9-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
+
+const CONSENT_CSS = `:root{--bg:#f6f7f8;--card:#fff;--ink:#0c0c0d;--ink2:#5b6670;--line:#e3e7ea;--accent:oklch(0.55 0.12 235);--accent-soft:oklch(0.95 0.03 235);--ok:oklch(0.62 0.14 150);--err:#a52222;--err-bg:#fff1f0}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1113;--card:#171a1d;--ink:#eceef0;--ink2:#9aa4ad;--line:#2a2f34;--accent:oklch(0.7 0.12 235);--accent-soft:oklch(0.3 0.05 235);--err:#ff9b94;--err-bg:#3a1714}}
+*{box-sizing:border-box}html,body{margin:0}body{font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);background-image:radial-gradient(circle at 1px 1px,var(--line) 1px,transparent 0);background-size:24px 24px;color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.card{width:100%;max-width:420px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;box-shadow:0 1px 2px #0000000a,0 12px 40px #0000000f}
+.link{display:flex;align-items:center;gap:10px;margin-bottom:20px}.chip{font-size:13px;font-weight:600;padding:6px 10px;border:1px solid var(--line);border-radius:999px;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chip.brand b{color:var(--accent)}
+.arrow{flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--ink2) 0 4px,transparent 4px 8px);opacity:.5}
+h1{font-size:20px;line-height:1.3;margin:0 0 6px;letter-spacing:-.01em;overflow-wrap:anywhere}.lead{margin:0;color:var(--ink2);font-size:14px}
+.grants{list-style:none;margin:20px 0;padding:14px 16px;border-radius:12px;background:var(--accent-soft);font-size:14px;display:grid;gap:8px}.grants li{display:flex;align-items:center;gap:10px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ink2);flex:none}.dot.ok{background:var(--ok)}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;border:1px solid transparent;transition:filter .15s,background .15s}
+.btn:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.primary{background:var(--accent);color:#fff;margin-top:18px}.primary:hover{filter:brightness(1.08)}
+.google{background:var(--card);color:var(--ink);border-color:var(--line)}.google:hover{background:var(--bg)}
+.or{display:flex;align-items:center;gap:12px;color:var(--ink2);font-size:12px;margin:18px 0 10px}.or:before,.or:after{content:"";flex:1;height:1px;background:var(--line)}
+.mode{border-top:1px solid var(--line)}.mode:first-of-type{border-top:0}.mode summary{list-style:none;cursor:pointer;padding:12px 0;font-weight:600;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.mode summary::-webkit-details-marker{display:none}.mode summary:after{content:"+";color:var(--ink2);font-size:18px;font-weight:400}.mode[open] summary:after{content:"−"}.mode form{padding-bottom:14px}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin:12px 0 6px}
+input[type=email],input[type=password]{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+fieldset{border:0;padding:0;margin:16px 0 0}legend{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;padding:0}
+.opt{display:flex;gap:10px;align-items:flex-start;margin:8px 0 0;padding:11px 13px;border:1px solid var(--line);border-radius:10px;cursor:pointer;color:var(--ink);font-weight:400}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}.opt input{margin:3px 0 0;accent-color:var(--accent)}.opt b{display:block;font-size:14px}.opt small{color:var(--ink2);font-size:12px}
+.hint{margin:0;color:var(--ink2);font-size:13px}.err{color:var(--err);background:var(--err-bg);border-radius:10px;padding:10px 14px;font-size:14px;margin:0 0 16px}
+.foot{margin:16px 0 0;color:var(--ink2);font-size:12px;text-align:center}`;
+
 function page(res: any, status: number, p: Params, message = '') {
   // A fresh consent for every rendering: the page is what the user actually sees.
   const nonce = randomBytes(18).toString('base64url');
@@ -82,30 +108,29 @@ function page(res: any, status: number, p: Params, message = '') {
     'X-Frame-Options': 'DENY',
     'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'",
   });
+  const googleHref = `/oauth/google?${esc(new URLSearchParams(Object.fromEntries(FIELDS.map(f => [f, p[f] || '']))).toString())}`;
   res.end(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Autoriser l'accès | SkAItch</title>
-<style>*{box-sizing:border-box}body{font-family:system-ui,sans-serif;background-color:#fff;background-image:linear-gradient(#edf0f2 1px,transparent 1px),linear-gradient(90deg,#edf0f2 1px,transparent 1px);background-size:32px 32px;color:#0c0c0d;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px}
-.card{background:#fff;border:1px solid #dce1e5;border-radius:12px;padding:32px;max-width:440px;width:100%;box-shadow:0 8px 32px #0c0c0d0d}
-.brand{font-size:24px;font-weight:700;letter-spacing:-.03em;margin-bottom:24px}.brand b{color:oklch(0.55 0.12 235)}h1{font-size:22px;margin:0 0 12px}p{color:#66717a;font-size:14px;line-height:1.5}
-label{display:block;font-size:12px;font-weight:500;color:#66717a;margin:20px 0 6px}
-input[type=password],input[type=email],select{width:100%;padding:11px 14px;border-radius:8px;border:1.5px solid #dce1e5;background:#fff;color:#0c0c0d;font-size:14px}
-button,.google{display:block;margin-top:20px;width:100%;padding:12px;border:0;border-radius:8px;background:oklch(0.55 0.12 235);color:#fff;font-size:14px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none}.google{border:1.5px solid #dce1e5;background:#fff;color:#0c0c0d}.mode{border:1px solid #e7e5e2;border-radius:10px;padding:20px;margin-top:16px}.mode summary{font-size:16px;font-weight:700;cursor:pointer}.mode p{margin:8px 0}.err{color:#a52222;background:#fff1f0;border:1px solid #f0c5c1;border-radius:8px;padding:10px 14px;font-size:14px}</style></head><body><main class="card">
-<div class="brand">Sk<b>AI</b>tch</div>
-<h1>Autoriser l'accès à vos projets</h1>
-<p>L'application <b>${esc(host)}</b> demande l'accès à vos projets SkAItch. Connectez-vous avec votre compte ou utilisez une clé API existante. L'application reçoit uniquement un jeton d'accès.</p>
-${message ? `<p class="err">${esc(message)}</p>` : ''}
+<style>${CONSENT_CSS}</style></head><body><main class="card">
+<header class="top"><div class="link"><span class="chip">${esc(host) || 'Application'}</span><span class="arrow" aria-hidden="true"></span><span class="chip brand">Sk<b>AI</b>tch</span></div>
+<h1>Connecter ${esc(host) || 'cette application'} à SkAItch</h1>
+<p class="lead">Cette application pourra travailler sur vos projets pendant que vous gardez la main.</p></header>
+<ul class="grants"><li><span class="dot ok"></span>Lire vos projets, présents et futurs</li><li><span class="dot ok"></span>Modifier les modèles si vous l’autorisez</li><li><span class="dot"></span>Elle ne voit jamais votre mot de passe</li></ul>
+${message ? `<p class="err" role="alert">${esc(message)}</p>` : ''}
+<a class="btn google" href="${googleHref}">${GOOGLE_ICON}Continuer avec Google</a>
+<div class="or"><span>ou</span></div>
 <details class="mode"${message && p.email ? ' open' : ''}><summary>Email et mot de passe</summary>
 <form method="POST" action="/api/mcp/authorize">${hidden}
-<label for="email">Email du compte</label><input type="email" id="email" name="email" autocomplete="username" required>
+<label for="email">Email</label><input type="email" id="email" name="email" autocomplete="username" required>
 <label for="password">Mot de passe</label><input type="password" id="password" name="password" autocomplete="current-password" required>
-<label for="access">Accès à tous les projets de ce compte, présents et futurs</label><select id="access" name="access"><option value="write" selected>Lecture et modification</option><option value="read">Lecture seule</option></select>
-<button type="submit">Continuer avec email</button></form></details>
-<details class="mode"${message && p.google_id_token ? ' open' : ''}><summary>Google</summary><p>Connectez-vous avec votre compte Google et choisissez les droits d’accès.</p>
-<a class="google" href="/oauth/google?${esc(new URLSearchParams(Object.fromEntries(FIELDS.map(f => [f, p[f] || '']))).toString())}">Continuer avec Google</a></details>
-<details class="mode"${message && p.api_key ? ' open' : ''}><summary>Clé API</summary><p>Les permissions existantes de cette clé s'appliquent.</p>
-<form method="POST" action="/api/mcp/authorize">${hidden}<label for="k">Clé API (SKAITCH_API_KEY)</label><input type="password" id="k" name="api_key" placeholder="ak_..." autocomplete="off" required>
-<button type="submit">Continuer avec la clé API</button></form></details>
-<p>Les autorisations par compte sont visibles et révocables dans vos clés API sous « Connexion OAuth ». Les nouveaux projets sont automatiquement accessibles avec les mêmes droits.</p>
+<fieldset><legend>Droits sur tous vos projets</legend>
+<label class="opt"><input type="radio" name="access" value="write" checked><span><b>Lecture et modification</b><small>Recommandé pour modéliser avec l’assistant</small></span></label>
+<label class="opt"><input type="radio" name="access" value="read"><span><b>Lecture seule</b><small>Consulter et exporter, sans rien changer</small></span></label></fieldset>
+<button class="btn primary" type="submit">Autoriser l’accès</button></form></details>
+<details class="mode"${message && p.api_key ? ' open' : ''}><summary>Clé API existante</summary><p class="hint">Les permissions de cette clé s’appliquent.</p>
+<form method="POST" action="/api/mcp/authorize">${hidden}<label for="k">Clé API</label><input type="password" id="k" name="api_key" placeholder="ak_…" autocomplete="off" required>
+<button class="btn primary" type="submit">Continuer avec la clé API</button></form></details>
+<p class="foot">Révocable à tout moment dans vos clés API, sous « Connexion OAuth ».</p>
 </main></body></html>`);
 }
 
