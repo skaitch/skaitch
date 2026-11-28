@@ -26,7 +26,7 @@ describe('Codex plugin download', () => {
     expect(manifest).toMatchObject({
       $schema: 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json',
       name: 'skaitch-web',
-      version: '0.1.4',
+      version: '0.1.5',
     });
     const { logo, composerIcon, displayName } = manifest.extensions['com.openai'].interface;
     expect(displayName).toBe('SkAItch Web');

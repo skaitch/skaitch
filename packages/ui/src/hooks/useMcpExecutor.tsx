@@ -118,6 +118,7 @@ export function useMcpExecutor(handlers: McpExecutorHandlers) {
       items[qid] ?? Object.values(items).find((i) => i.GlobalId === qid);
 
     if (name === 'execute_script') {
+      if (alwaysValidate) throw new Error('execute_script is disabled while MCP change validation is enabled.');
       return runCodeMode(args.code, items, hRef.current.catalogue, AbortSignal.timeout(expiresAt - Date.now()));
     }
 

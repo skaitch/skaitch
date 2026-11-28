@@ -13,7 +13,7 @@ Use the compact MCP interface when available. Load `edit_model` before modelling
 
 The `skaitch-web` server uses OAuth and lists the projects authorized for this connection.
 
-1. `list_projects` → `select_project` → `execute_script` with `return callTool("list_spatial_structure");` → `select_storey`.
+1. `list_projects` → `select_project` → `list_spatial_structure` → `select_storey`. Avoid `execute_script` on Web: it needs an open editor tab and is disabled while change validation is on.
 2. Never assume the project shown in the browser is the MCP context: selection belongs to the connection/API key.
 3. Cloud reads see the **saved** model — ask the user to save before reading their recent edits.
 4. Mutations apply directly on the saved model by default. If the user turned on « always validate » in settings, they need an open editor tab to approve. `get_view`/`set_view`/`capture_view` need an open editor tab.

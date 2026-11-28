@@ -19,7 +19,7 @@ const desktopSkill = skill
 The \`skaitch-desktop\` server connects through the private URL in Desktop settings. Keep skAItch Desktop open.
 
 1. Run \`list_projects\` to see the local library, then \`select_project\` to open the project in the editor.
-2. Run \`execute_script\` with \`return callTool("list_spatial_structure");\`, then \`select_storey\`.
+2. Run \`list_spatial_structure\`, then \`select_storey\`. \`execute_script\` is disabled while change confirmation is enabled.
 3. Changes apply directly; Accept or Refuse prompts appear only if change confirmation is enabled in settings.
 
 `);
@@ -31,7 +31,7 @@ export function codexPluginArchive(url: string, target: CodexPluginTarget) {
     'plugin.json': strToU8(JSON.stringify({
       ...manifest,
       name: variant.name,
-      version: target === 'web' ? '0.1.4' : manifest.version,
+      version: manifest.version,
       description: variant.description,
       extensions: { ...manifest.extensions, 'com.openai': { ...openai, interface: { ...openai.interface, displayName: variant.displayName } } },
     }, null, 2)),

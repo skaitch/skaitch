@@ -88,6 +88,7 @@ export async function executeCloudTool(uid: string, apiKey: string, name: string
   if (MCP_READ_TOOLS.includes(name)) return { handled: true, result: readMcpModel(name, args, items, catalogue) };
   if (name === 'get_wall_connections') return { handled: true, result: computeMcpModel(name, args, items, storeyId, catalogue).result };
   if (name === 'execute_script') {
+    if (state.settings.alwaysValidate === true) throw new InputError('execute_script is disabled while MCP change validation is enabled.', 403);
     return { handled: false, projectId, storeyId, forceConfirm: false };
   }
   if (name === 'apply_model_batch') {
@@ -107,7 +108,10 @@ export async function executeCloudTool(uid: string, apiKey: string, name: string
       thumbnailSvg: generateThumbnailSvg(batch.items), updatedAt: new Date().toISOString(),
     }, context.modelRevision, async tx => {
       signal?.throwIfAborted();
-      await checkCurrent(tx);
+      const current = await checkCurrent(tx);
+      if (!approval && (current.settings.alwaysValidate === true || (current.settings.revision ?? 0) !== (state.settings.revision ?? 0))) {
+        throw new InputError('MCP confirmation settings changed. Retry the command.', 409);
+      }
     });
     return { handled: true, result: { ...batch.result, model_revision: saved.modelRevision } };
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "skaitch-web",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "Connect Codex to SkAItch Web BIM projects via OAuth.",
   "author": {
     "name": "skAItch",
